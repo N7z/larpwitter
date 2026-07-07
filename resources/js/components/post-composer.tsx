@@ -1,14 +1,14 @@
 import { useForm } from '@inertiajs/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { ChangeEvent, ClipboardEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import Button from '@/components/button';
 
 interface PostComposerProps {
     action: string;
     placeholder?: string;
-    onOptimisticSubmit?: (body: string, imageUrl: string | null) => void | (() => void);
 }
 
-export default function PostComposer({ action, placeholder = "What's happening?", onOptimisticSubmit }: PostComposerProps) {
+export default function PostComposer({ action, placeholder = "What's happening?" }: PostComposerProps) {
     const form = useForm<{ body: string; image: File | null }>({ body: '', image: null });
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,9 +45,6 @@ export default function PostComposer({ action, placeholder = "What's happening?"
 
     function submit(e: FormEvent) {
         e.preventDefault();
-        const body = form.data.body;
-
-        const revertOptimisticSubmit = onOptimisticSubmit?.(body, imagePreview);
 
         form.post(action, {
             forceFormData: true,
@@ -56,7 +53,6 @@ export default function PostComposer({ action, placeholder = "What's happening?"
                 form.reset('body');
                 setImage(null);
             },
-            onError: () => revertOptimisticSubmit?.(),
         });
     }
 
@@ -75,19 +71,27 @@ export default function PostComposer({ action, placeholder = "What's happening?"
             />
             {form.errors.body && <p className="mt-1 text-sm text-red-600">{form.errors.body}</p>}
 
-            {imagePreview && (
-                <div className="relative mt-2 inline-block">
-                    <img src={imagePreview} alt="" className="max-h-60 rounded-lg border border-gray-200" />
-                    <button
-                        type="button"
-                        onClick={() => setImage(null)}
-                        className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-900 text-xs text-white hover:bg-gray-700"
-                        aria-label="Remove image"
+            <AnimatePresence>
+                {imagePreview && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="relative mt-2 inline-block"
                     >
-                        ×
-                    </button>
-                </div>
-            )}
+                        <img src={imagePreview} alt="" className="max-h-60 rounded-lg border border-gray-200" />
+                        <button
+                            type="button"
+                            onClick={() => setImage(null)}
+                            className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-900 text-xs text-white hover:bg-gray-700"
+                            aria-label="Remove image"
+                        >
+                            ×
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             {form.errors.image && <p className="mt-1 text-sm text-red-600">{form.errors.image}</p>}
 
             <div className="mt-2 flex items-center justify-between">

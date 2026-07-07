@@ -1,6 +1,9 @@
 import { Link, router, usePage } from '@inertiajs/react';
+import { Heart, Trash2 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import Avatar from '@/components/avatar';
+import ConfirmDialog from '@/components/confirm-dialog';
 import { PostItem, Shared } from '@/types';
 
 interface PostCardProps {
@@ -38,10 +41,6 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
     }
 
     function deletePost() {
-        if (!confirm('Delete this post? This cannot be undone.')) {
-            return;
-        }
-
         setDeleting(true);
         router.delete(`/posts/${post.id}`, {
             preserveScroll: true,
@@ -50,7 +49,14 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
     }
 
     return (
-        <article className="flex gap-3 border-b border-gray-200 bg-white p-4">
+        <motion.article
+            layout
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="flex gap-3 border-b border-gray-200 bg-white p-4"
+        >
             <Link href={`/u/${post.user.username}`}>
                 <Avatar username={post.user.username} displayName={post.user.display_name} avatarUrl={post.user.avatar_url} size="sm" />
             </Link>
@@ -71,30 +77,49 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                     />
                 )}
                 <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
-                    <button
+                    <motion.button
                         type="button"
                         onClick={toggleLike}
+                        whileTap={{ scale: 0.85 }}
                         className={`flex items-center gap-1 hover:text-rose-600 ${liked ? 'text-rose-600' : ''}`}
                     >
-                        {liked ? '♥' : '♡'} {likesCount}
-                    </button>
+                        <motion.span
+                            key={liked ? 'liked' : 'unliked'}
+                            initial={{ scale: 0.6 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+                            className="flex"
+                        >
+                            <Heart className="h-4 w-4" fill={liked ? 'currentColor' : 'none'} />
+                        </motion.span>
+                        {likesCount}
+                    </motion.button>
                     {linkToShow && (
                         <Link href={`/posts/${post.id}`} className="hover:text-sky-600">
                             {post.replies_count} {post.replies_count === 1 ? 'reply' : 'replies'}
                         </Link>
                     )}
                     {isOwnPost && (
-                        <button
-                            type="button"
-                            onClick={deletePost}
-                            disabled={deleting}
-                            className="ml-auto hover:text-red-600 disabled:opacity-50"
-                        >
-                            {deleting ? 'Deleting...' : 'Delete'}
-                        </button>
+                        <ConfirmDialog
+                            title="Delete this post?"
+                            description="This cannot be undone."
+                            confirmLabel="Delete"
+                            onConfirm={deletePost}
+                            trigger={
+                                <motion.button
+                                    type="button"
+                                    disabled={deleting}
+                                    whileTap={{ scale: 0.85 }}
+                                    aria-label="Delete post"
+                                    className="ml-auto hover:text-red-600 disabled:opacity-50"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </motion.button>
+                            }
+                        />
                     )}
                 </div>
             </div>
-        </article>
+        </motion.article>
     );
 }

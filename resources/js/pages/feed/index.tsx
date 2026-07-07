@@ -1,9 +1,10 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { AnimatePresence } from 'motion/react';
 import { useEffect, useState } from 'react';
 import PostCard from '@/components/post-card';
 import PostComposer from '@/components/post-composer';
 import AppLayout from '@/layouts/app-layout';
-import { PostItem, Shared } from '@/types';
+import { PostItem } from '@/types';
 
 interface FeedIndexProps {
     posts: {
@@ -13,37 +14,11 @@ interface FeedIndexProps {
 }
 
 export default function FeedIndex({ posts, scope }: FeedIndexProps) {
-    const { auth } = usePage<Shared>().props;
     const [items, setItems] = useState(posts.data);
 
     useEffect(() => {
         setItems(posts.data);
     }, [posts.data]);
-
-    function handleOptimisticSubmit(body: string, imageUrl: string | null) {
-        if (!auth.user) {
-            return;
-        }
-
-        const id = -Date.now();
-
-        setItems((current) => [
-            {
-                id,
-                body,
-                image_url: imageUrl,
-                created_at: new Date().toISOString(),
-                user: auth.user!,
-                likes_count: 0,
-                replies_count: 0,
-                liked: false,
-                parent_id: null,
-            },
-            ...current,
-        ]);
-
-        return () => setItems((current) => current.filter((item) => item.id !== id));
-    }
 
     return (
         <AppLayout>
@@ -68,13 +43,17 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
                 </Link>
             </div>
 
-            <PostComposer action="/posts" onOptimisticSubmit={handleOptimisticSubmit} />
+            <PostComposer action="/posts" />
 
             <div className="overflow-hidden rounded-lg border border-gray-200">
                 {items.length === 0 ? (
                     <p className="p-6 text-center text-sm text-gray-500">No posts yet.</p>
                 ) : (
-                    items.map((post) => <PostCard key={post.id} post={post} />)
+                    <AnimatePresence initial={false}>
+                        {items.map((post) => (
+                            <PostCard key={post.id} post={post} />
+                        ))}
+                    </AnimatePresence>
                 )}
             </div>
         </AppLayout>
