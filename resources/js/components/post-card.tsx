@@ -48,6 +48,13 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                     <span className="text-sm text-gray-400">· {new Date(post.created_at).toLocaleString()}</span>
                 </div>
                 <p className="mt-1 whitespace-pre-wrap text-gray-900">{post.body}</p>
+                {post.image_url && (
+                    <img
+                        src={post.image_url}
+                        alt=""
+                        className="mt-2 max-h-96 w-full rounded-lg border border-gray-200 object-cover"
+                    />
+                )}
                 <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
                     <button
                         type="button"

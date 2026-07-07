@@ -13,6 +13,7 @@ class ReplyController extends Controller
         $post->replies()->create([
             'user_id' => $request->user()->id,
             'body' => $request->body,
+            'image_path' => $request->file('image')?->store('posts', 'public'),
         ]);
 
         return redirect()->route('posts.show', $post);

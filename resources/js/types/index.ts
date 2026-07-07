@@ -8,6 +8,7 @@ export interface UserInfo {
 export interface PostItem {
     id: number;
     body: string;
+    image_url: string | null;
     created_at: string;
     user: UserInfo;
     likes_count: number;

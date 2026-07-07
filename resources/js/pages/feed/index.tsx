@@ -20,7 +20,7 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
         setItems(posts.data);
     }, [posts.data]);
 
-    function handleOptimisticSubmit(body: string) {
+    function handleOptimisticSubmit(body: string, imageUrl: string | null) {
         if (!auth.user) {
             return;
         }
@@ -29,6 +29,7 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
             {
                 id: -Date.now(),
                 body,
+                image_url: imageUrl,
                 created_at: new Date().toISOString(),
                 user: auth.user!,
                 likes_count: 0,

@@ -47,6 +47,7 @@ class PostController extends Controller
     {
         $request->user()->posts()->create([
             'body' => $request->body,
+            'image_path' => $request->file('image')?->store('posts', 'public'),
         ]);
 
         return redirect()->back();

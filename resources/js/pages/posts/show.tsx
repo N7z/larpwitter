@@ -18,7 +18,7 @@ export default function PostShow({ post, replies }: PostShowProps) {
         setItems(replies);
     }, [replies]);
 
-    function handleOptimisticSubmit(body: string) {
+    function handleOptimisticSubmit(body: string, imageUrl: string | null) {
         if (!auth.user) {
             return;
         }
@@ -27,6 +27,7 @@ export default function PostShow({ post, replies }: PostShowProps) {
             {
                 id: -Date.now(),
                 body,
+                image_url: imageUrl,
                 created_at: new Date().toISOString(),
                 user: auth.user!,
                 likes_count: 0,
