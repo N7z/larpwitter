@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Concerns\ThrottlesPosting;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePostRequest extends FormRequest
+class StoreRepostRequest extends FormRequest
 {
     use ThrottlesPosting;
 
@@ -20,8 +20,7 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'body' => ['required', 'string', 'max:280'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:5120'],
+            'body' => ['nullable', 'string', 'max:280'],
         ];
     }
 }

@@ -19,8 +19,8 @@ class PostController extends Controller
 
         $query = Post::query()
             ->whereNull('parent_id')
-            ->with('user')
-            ->withCount(['likedBy as likes_count', 'replies'])
+            ->with(['user', 'repostOf.user'])
+            ->withCount(['likedBy as likes_count', 'replies', 'reposts'])
             ->with(['likedBy' => fn ($q) => $q->where('users.id', $user->id)])
             ->latest();
 
@@ -55,13 +55,14 @@ class PostController extends Controller
 
     public function show(Post $post): Response
     {
-        $post->load('user');
+        $post->load(['user', 'repostOf.user']);
         $post->likes_count = $post->likedBy()->count();
+        $post->reposts_count = $post->reposts()->count();
         $post->liked = $post->likedBy()->where('users.id', request()->user()->id)->exists();
 
         $replies = $post->replies()
             ->with('user')
-            ->withCount(['likedBy as likes_count', 'replies'])
+            ->withCount(['likedBy as likes_count', 'replies', 'reposts'])
             ->with(['likedBy' => fn ($q) => $q->where('users.id', request()->user()->id)])
             ->get()
             ->each(function (Post $reply) {

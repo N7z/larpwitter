@@ -1,9 +1,11 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { Heart, Trash2 } from 'lucide-react';
+import { Heart, Repeat2, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import Avatar from '@/components/avatar';
 import ConfirmDialog from '@/components/confirm-dialog';
+import PostEmbed from '@/components/post-embed';
+import RepostDialog from '@/components/repost-dialog';
 import { PostItem, Shared } from '@/types';
 
 interface PostCardProps {
@@ -61,6 +63,12 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                 <Avatar username={post.user.username} displayName={post.user.display_name} avatarUrl={post.user.avatar_url} size="sm" />
             </Link>
             <div className="min-w-0 flex-1">
+                {post.repost_of && !post.body && (
+                    <div className="mb-1 flex items-center gap-1 text-xs font-medium text-gray-500">
+                        <Repeat2 className="h-3.5 w-3.5" />
+                        {post.user.display_name} reposted
+                    </div>
+                )}
                 <div className="flex items-baseline gap-2">
                     <Link href={`/u/${post.user.username}`}>
                         <span className="font-semibold text-gray-900 hover:text-blue-500">{post.user.display_name}</span>
@@ -68,7 +76,7 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                     <span className="text-sm text-gray-500">@{post.user.username}</span>
                     <span className="text-sm text-gray-400">· {new Date(post.created_at).toLocaleString()}</span>
                 </div>
-                <p className="mt-1 whitespace-pre-wrap text-gray-900">{post.body}</p>
+                {post.body && <p className="mt-1 whitespace-pre-wrap text-gray-900">{post.body}</p>}
                 {post.image_url && (
                     <img
                         src={post.image_url}
@@ -76,6 +84,7 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                         className="mt-2 max-h-96 w-full rounded-lg border border-gray-200 object-cover"
                     />
                 )}
+                {post.repost_of && <PostEmbed post={post.repost_of} />}
                 <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
                     <motion.button
                         type="button"
@@ -94,6 +103,20 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                         </motion.span>
                         {likesCount}
                     </motion.button>
+                    <RepostDialog
+                        post={post}
+                        trigger={
+                            <motion.button
+                                type="button"
+                                whileTap={{ scale: 0.85 }}
+                                className="flex items-center gap-1 hover:text-emerald-600"
+                                aria-label="Repost"
+                            >
+                                <Repeat2 className="h-4 w-4" />
+                                {post.reposts_count}
+                            </motion.button>
+                        }
+                    />
                     {linkToShow && (
                         <Link href={`/posts/${post.id}`} className="hover:text-sky-600">
                             {post.replies_count} {post.replies_count === 1 ? 'reply' : 'replies'}

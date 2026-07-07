@@ -5,6 +5,14 @@ export interface UserInfo {
     avatar_url: string | null;
 }
 
+export interface RepostTarget {
+    id: number;
+    body: string;
+    image_url: string | null;
+    created_at: string;
+    user: UserInfo;
+}
+
 export interface PostItem {
     id: number;
     body: string;
@@ -13,8 +21,10 @@ export interface PostItem {
     user: UserInfo;
     likes_count: number;
     replies_count: number;
+    reposts_count: number;
     liked: boolean;
     parent_id: number | null;
+    repost_of: RepostTarget | null;
 }
 
 export interface Shared {

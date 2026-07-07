@@ -8,6 +8,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\RepostController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
     Route::post('posts/{post}/replies', [ReplyController::class, 'store'])->name('replies.store');
+    Route::post('posts/{post}/reposts', [RepostController::class, 'store'])->name('reposts.store');
 
     Route::post('posts/{post}/like', [LikeController::class, 'store'])->name('likes.store');
     Route::delete('posts/{post}/like', [LikeController::class, 'destroy'])->name('likes.destroy');

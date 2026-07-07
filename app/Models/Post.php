@@ -19,6 +19,7 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'parent_id',
+        'repost_of_id',
         'body',
         'image_path',
     ];
@@ -54,8 +55,23 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'likes')->withTimestamps();
     }
 
+    public function repostOf(): BelongsTo
+    {
+        return $this->belongsTo(Post::class, 'repost_of_id');
+    }
+
+    public function reposts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'repost_of_id');
+    }
+
     public function isReply(): bool
     {
         return $this->parent_id !== null;
+    }
+
+    public function isRepost(): bool
+    {
+        return $this->repost_of_id !== null;
     }
 }
