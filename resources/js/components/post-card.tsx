@@ -69,6 +69,14 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                         {post.user.display_name} reposted
                     </div>
                 )}
+                {post.parent && (
+                    <div className="mb-1 text-xs text-gray-500">
+                        Replying to{' '}
+                        <Link href={`/u/${post.parent.user.username}`} className="text-sky-600 hover:underline">
+                            @{post.parent.user.username}
+                        </Link>
+                    </div>
+                )}
                 <div className="flex items-baseline gap-2">
                     <Link href={`/u/${post.user.username}`}>
                         <span className="font-semibold text-gray-900 hover:text-blue-500">{post.user.display_name}</span>

@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import AvatarUpload from '@/components/avatar-upload';
 import Avatar from '@/components/avatar';
@@ -13,6 +14,7 @@ interface ProfileShowProps {
     followingCount: number;
     isFollowing: boolean | null;
     isOwnProfile: boolean;
+    tab: 'posts' | 'replies';
     posts: PostItem[];
 }
 
@@ -23,6 +25,7 @@ export default function ProfileShow({
     followingCount,
     isFollowing,
     isOwnProfile,
+    tab,
     posts,
 }: ProfileShowProps) {
     const [avatarUrl, setAvatarUrl] = useState(profileUser.avatar_url);
@@ -62,9 +65,32 @@ export default function ProfileShow({
                 </div>
             </div>
 
+            <div className="mb-4 flex gap-4 border-b border-gray-200 text-sm font-medium">
+                <Link
+                    href={`/u/${profileUser.username}?tab=posts`}
+                    preserveState
+                    className={`-mb-px border-b-2 px-1 pb-2 ${
+                        tab === 'posts' ? 'border-sky-500 text-sky-600' : 'border-transparent text-gray-500'
+                    }`}
+                >
+                    Posts
+                </Link>
+                <Link
+                    href={`/u/${profileUser.username}?tab=replies`}
+                    preserveState
+                    className={`-mb-px border-b-2 px-1 pb-2 ${
+                        tab === 'replies' ? 'border-sky-500 text-sky-600' : 'border-transparent text-gray-500'
+                    }`}
+                >
+                    Replies
+                </Link>
+            </div>
+
             <div className="overflow-hidden rounded-lg border border-gray-200">
                 {posts.length === 0 ? (
-                    <p className="p-6 text-center text-sm text-gray-500">No posts yet.</p>
+                    <p className="p-6 text-center text-sm text-gray-500">
+                        {tab === 'replies' ? 'No replies yet.' : 'No posts yet.'}
+                    </p>
                 ) : (
                     posts.map((post) => <PostCard key={post.id} post={post} />)
                 )}

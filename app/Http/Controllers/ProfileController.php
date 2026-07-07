@@ -13,26 +13,32 @@ class ProfileController extends Controller
     public function show(Request $request, User $user): Response
     {
         $authUser = $request->user();
+        $tab = $request->string('tab')->value() === 'replies' ? 'replies' : 'posts';
 
-        $posts = $user->posts()
-            ->whereNull('parent_id')
-            ->with('user')
-            ->withCount(['likedBy as likes_count', 'replies'])
-            ->with(['likedBy' => fn ($q) => $q->where('users.id', $authUser->id)])
-            ->latest()
-            ->get()
-            ->each(function (Post $post) {
-                $post->liked = $post->likedBy->isNotEmpty();
-                unset($post->likedBy);
-            });
+        $query = $user->posts()
+            ->with(['user', 'repostOf.user'])
+            ->withCount(['likedBy as likes_count', 'replies', 'reposts'])
+            ->with(['likedBy' => fn ($q) => $q->where('users.id', $authUser->id)]);
+
+        if ($tab === 'replies') {
+            $query->whereNotNull('parent_id')->with('parent.user');
+        } else {
+            $query->whereNull('parent_id');
+        }
+
+        $posts = $query->latest()->get()->each(function (Post $post) {
+            $post->liked = $post->likedBy->isNotEmpty();
+            unset($post->likedBy);
+        });
 
         return Inertia::render('profile/show', [
             'profileUser' => $user->only(['id', 'username', 'display_name', 'avatar_url']),
-            'postsCount' => $posts->count(),
+            'postsCount' => $user->posts()->whereNull('parent_id')->count(),
             'followersCount' => $user->followers()->count(),
             'followingCount' => $user->following()->count(),
             'isFollowing' => $authUser->id === $user->id ? null : $authUser->isFollowing($user),
             'isOwnProfile' => $authUser->id === $user->id,
+            'tab' => $tab,
             'posts' => $posts,
         ]);
     }
