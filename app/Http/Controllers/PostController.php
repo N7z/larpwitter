@@ -79,8 +79,10 @@ class PostController extends Controller
     {
         Gate::authorize('delete', $post);
 
+        $redirectTo = $post->isReply() ? route('posts.show', $post->parent_id) : route('feed');
+
         $post->delete();
 
-        return redirect()->back();
+        return redirect($redirectTo);
     }
 }

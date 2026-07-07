@@ -5,7 +5,7 @@ import Button from '@/components/button';
 interface PostComposerProps {
     action: string;
     placeholder?: string;
-    onOptimisticSubmit?: (body: string, imageUrl: string | null) => void;
+    onOptimisticSubmit?: (body: string, imageUrl: string | null) => void | (() => void);
 }
 
 export default function PostComposer({ action, placeholder = "What's happening?", onOptimisticSubmit }: PostComposerProps) {
@@ -47,7 +47,7 @@ export default function PostComposer({ action, placeholder = "What's happening?"
         e.preventDefault();
         const body = form.data.body;
 
-        onOptimisticSubmit?.(body, imagePreview);
+        const revertOptimisticSubmit = onOptimisticSubmit?.(body, imagePreview);
 
         form.post(action, {
             forceFormData: true,
@@ -56,6 +56,7 @@ export default function PostComposer({ action, placeholder = "What's happening?"
                 form.reset('body');
                 setImage(null);
             },
+            onError: () => revertOptimisticSubmit?.(),
         });
     }
 

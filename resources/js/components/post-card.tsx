@@ -1,7 +1,7 @@
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import Avatar from '@/components/avatar';
-import { PostItem } from '@/types';
+import { PostItem, Shared } from '@/types';
 
 interface PostCardProps {
     post: PostItem;
@@ -9,8 +9,11 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, linkToShow = true }: PostCardProps) {
+    const { auth } = usePage<Shared>().props;
     const [liked, setLiked] = useState(post.liked);
     const [likesCount, setLikesCount] = useState(post.likes_count);
+    const [deleting, setDeleting] = useState(false);
+    const isOwnPost = auth.user?.id === post.user.id;
 
     useEffect(() => {
         setLiked(post.liked);
@@ -32,6 +35,18 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
         } else {
             router.post(`/posts/${post.id}/like`, {}, { preserveScroll: true, preserveState: true, onError: revert });
         }
+    }
+
+    function deletePost() {
+        if (!confirm('Delete this post? This cannot be undone.')) {
+            return;
+        }
+
+        setDeleting(true);
+        router.delete(`/posts/${post.id}`, {
+            preserveScroll: true,
+            onError: () => setDeleting(false),
+        });
     }
 
     return (
@@ -67,6 +82,16 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                         <Link href={`/posts/${post.id}`} className="hover:text-sky-600">
                             {post.replies_count} {post.replies_count === 1 ? 'reply' : 'replies'}
                         </Link>
+                    )}
+                    {isOwnPost && (
+                        <button
+                            type="button"
+                            onClick={deletePost}
+                            disabled={deleting}
+                            className="ml-auto hover:text-red-600 disabled:opacity-50"
+                        >
+                            {deleting ? 'Deleting...' : 'Delete'}
+                        </button>
                     )}
                 </div>
             </div>

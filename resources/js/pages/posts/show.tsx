@@ -23,9 +23,11 @@ export default function PostShow({ post, replies }: PostShowProps) {
             return;
         }
 
+        const id = -Date.now();
+
         setItems((current) => [
             {
-                id: -Date.now(),
+                id,
                 body,
                 image_url: imageUrl,
                 created_at: new Date().toISOString(),
@@ -37,6 +39,8 @@ export default function PostShow({ post, replies }: PostShowProps) {
             },
             ...current,
         ]);
+
+        return () => setItems((current) => current.filter((item) => item.id !== id));
     }
 
     return (
