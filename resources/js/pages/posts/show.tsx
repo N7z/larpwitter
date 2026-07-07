@@ -1,9 +1,10 @@
+import { Link, usePage } from '@inertiajs/react';
 import { AnimatePresence } from 'motion/react';
 import { useEffect, useState } from 'react';
 import PostCard from '@/components/post-card';
 import PostComposer from '@/components/post-composer';
 import AppLayout from '@/layouts/app-layout';
-import { PostItem } from '@/types';
+import { PostItem, Shared } from '@/types';
 
 interface PostShowProps {
     post: PostItem;
@@ -11,6 +12,7 @@ interface PostShowProps {
 }
 
 export default function PostShow({ post, replies }: PostShowProps) {
+    const { auth } = usePage<Shared>().props;
     const [items, setItems] = useState(replies);
 
     useEffect(() => {
@@ -24,7 +26,16 @@ export default function PostShow({ post, replies }: PostShowProps) {
             </div>
 
             <div className="mt-4">
-                <PostComposer action={`/posts/${post.id}/replies`} placeholder="Post your reply" />
+                {auth.user ? (
+                    <PostComposer action={`/posts/${post.id}/replies`} placeholder="Post your reply" />
+                ) : (
+                    <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-sm text-gray-600">
+                        <Link href="/login" className="font-semibold text-sky-600 hover:underline">
+                            Log in
+                        </Link>{' '}
+                        to reply.
+                    </div>
+                )}
             </div>
 
             <div className="overflow-hidden rounded-lg border border-gray-200">

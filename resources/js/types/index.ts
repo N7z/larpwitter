@@ -29,7 +29,7 @@ export interface PostItem {
     liked: boolean;
     parent_id: number | null;
     repost_of: RepostTarget | null;
-    parent?: { id: number; user: UserInfo } | null;
+    parent?: RepostTarget | null;
 }
 
 export interface NotificationItem {

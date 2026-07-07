@@ -26,6 +26,11 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
     }, [post.liked, post.likes_count]);
 
     function toggleLike() {
+        if (!auth.user) {
+            router.visit('/login');
+            return;
+        }
+
         const wasLiked = liked;
         setLiked(!wasLiked);
         setLikesCount((count) => count + (wasLiked ? -1 : 1));
@@ -77,7 +82,8 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                         </Link>
                     </div>
                 )}
-                <div className="flex items-baseline gap-2">
+                {post.parent && <PostEmbed post={post.parent} />}
+                <div className={`flex items-baseline gap-2 ${post.parent ? 'mt-2' : ''}`}>
                     <Link href={`/u/${post.user.username}`}>
                         <span className="font-semibold text-gray-900 hover:text-blue-500">{post.user.display_name}</span>
                     </Link>
@@ -111,20 +117,27 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                         </motion.span>
                         {likesCount}
                     </motion.button>
-                    <RepostDialog
-                        post={post}
-                        trigger={
-                            <motion.button
-                                type="button"
-                                whileTap={{ scale: 0.85 }}
-                                className="flex items-center gap-1 hover:text-emerald-600"
-                                aria-label="Repost"
-                            >
-                                <Repeat2 className="h-4 w-4" />
-                                {post.reposts_count}
-                            </motion.button>
-                        }
-                    />
+                    {auth.user ? (
+                        <RepostDialog
+                            post={post}
+                            trigger={
+                                <motion.button
+                                    type="button"
+                                    whileTap={{ scale: 0.85 }}
+                                    className="flex items-center gap-1 hover:text-emerald-600"
+                                    aria-label="Repost"
+                                >
+                                    <Repeat2 className="h-4 w-4" />
+                                    {post.reposts_count}
+                                </motion.button>
+                            }
+                        />
+                    ) : (
+                        <Link href="/login" className="flex items-center gap-1 hover:text-emerald-600" aria-label="Repost">
+                            <Repeat2 className="h-4 w-4" />
+                            {post.reposts_count}
+                        </Link>
+                    )}
                     {linkToShow && (
                         <Link href={`/posts/${post.id}`} className="hover:text-sky-600">
                             {post.replies_count} {post.replies_count === 1 ? 'reply' : 'replies'}

@@ -14,15 +14,18 @@ class PostController extends Controller
 {
     public function index(Request $request): Response
     {
-        $scope = $request->string('scope')->value() === 'following' ? 'following' : 'global';
         $user = $request->user();
+        $scope = $user && $request->string('scope')->value() === 'following' ? 'following' : 'global';
 
         $query = Post::query()
             ->whereNull('parent_id')
             ->with(['user', 'repostOf.user'])
             ->withCount(['likedBy as likes_count', 'replies', 'reposts'])
-            ->with(['likedBy' => fn ($q) => $q->where('users.id', $user->id)])
             ->latest();
+
+        if ($user) {
+            $query->with(['likedBy' => fn ($q) => $q->where('users.id', $user->id)]);
+        }
 
         if ($scope === 'following') {
             $query->whereIn('user_id', [...$user->following()->pluck('users.id')->all(), $user->id]);
@@ -31,7 +34,7 @@ class PostController extends Controller
         $posts = $query->paginate(20)->withQueryString();
 
         $posts->getCollection()->transform(function (Post $post) {
-            $post->liked = $post->likedBy->isNotEmpty();
+            $post->liked = $post->relationLoaded('likedBy') ? $post->likedBy->isNotEmpty() : false;
             unset($post->likedBy);
 
             return $post;
@@ -55,18 +58,24 @@ class PostController extends Controller
 
     public function show(Post $post): Response
     {
-        $post->load(['user', 'repostOf.user']);
+        $post->load(['user', 'repostOf.user', 'parent.user']);
+        $userId = request()->user()?->id;
+
         $post->likes_count = $post->likedBy()->count();
         $post->reposts_count = $post->reposts()->count();
-        $post->liked = $post->likedBy()->where('users.id', request()->user()->id)->exists();
+        $post->liked = $userId ? $post->likedBy()->where('users.id', $userId)->exists() : false;
 
-        $replies = $post->replies()
+        $repliesQuery = $post->replies()
             ->with('user')
-            ->withCount(['likedBy as likes_count', 'replies', 'reposts'])
-            ->with(['likedBy' => fn ($q) => $q->where('users.id', request()->user()->id)])
-            ->get()
+            ->withCount(['likedBy as likes_count', 'replies', 'reposts']);
+
+        if ($userId) {
+            $repliesQuery->with(['likedBy' => fn ($q) => $q->where('users.id', $userId)]);
+        }
+
+        $replies = $repliesQuery->get()
             ->each(function (Post $reply) {
-                $reply->liked = $reply->likedBy->isNotEmpty();
+                $reply->liked = $reply->relationLoaded('likedBy') ? $reply->likedBy->isNotEmpty() : false;
                 unset($reply->likedBy);
             });
 

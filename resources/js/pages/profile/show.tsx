@@ -11,6 +11,7 @@ import { PostItem, ProfileUser } from '@/types';
 interface ProfileShowProps {
     profileUser: ProfileUser;
     postsCount: number;
+    repliesCount: number;
     followersCount: number;
     followingCount: number;
     isFollowing: boolean | null;
@@ -22,6 +23,7 @@ interface ProfileShowProps {
 export default function ProfileShow({
     profileUser,
     postsCount,
+    repliesCount,
     followersCount,
     followingCount,
     isFollowing,
@@ -69,7 +71,7 @@ export default function ProfileShow({
 
                 <div className="mt-4 flex gap-4 text-sm text-gray-600">
                     <span>
-                        <strong className="text-gray-900">{postsCount}</strong> posts
+                        <strong className="text-gray-900">{postsCount + repliesCount}</strong> posts
                     </span>
                     <span>
                         <strong className="text-gray-900">{followersCount}</strong> followers

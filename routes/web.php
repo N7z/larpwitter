@@ -25,10 +25,12 @@ Route::middleware('guest')->group(function () {
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')->name('logout');
 
+Route::get('/', [PostController::class, 'index'])->name('feed');
+Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('u/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
+
 Route::middleware('auth')->group(function () {
-    Route::get('/', [PostController::class, 'index'])->name('feed');
     Route::post('posts', [PostController::class, 'store'])->name('posts.store');
-    Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
     Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
     Route::post('posts/{post}/replies', [ReplyController::class, 'store'])->name('replies.store');
@@ -39,8 +41,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('users/{user:username}/follow', [FollowController::class, 'store'])->name('follows.store');
     Route::delete('users/{user:username}/follow', [FollowController::class, 'destroy'])->name('follows.destroy');
-
-    Route::get('u/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 
     Route::post('profile/avatar', [AvatarController::class, 'store'])->name('avatar.store');
     Route::post('profile/bio', [BioController::class, 'store'])->name('bio.store');

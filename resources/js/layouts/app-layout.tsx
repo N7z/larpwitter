@@ -18,7 +18,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                             Larpwitter
                         </Link>
                         <nav className="flex items-center gap-4 text-sm">
-                            {auth.user && (
+                            {auth.user ? (
                                 <>
                                     <Link href="/notifications" className="relative text-gray-500 hover:text-gray-900" aria-label="Notifications">
                                         <Bell className="h-5 w-5" />
@@ -37,11 +37,20 @@ export default function AppLayout({ children }: PropsWithChildren) {
                                         />
                                         @{auth.user.username}
                                     </Link>
+                                    <Link href="/logout" method="post" as="button" className="text-gray-500 hover:text-gray-900">
+                                        Log out
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link href="/login" className="text-gray-500 hover:text-gray-900">
+                                        Log in
+                                    </Link>
+                                    <Link href="/register" className="font-semibold text-sky-600 hover:underline">
+                                        Sign up
+                                    </Link>
                                 </>
                             )}
-                            <Link href="/logout" method="post" as="button" className="text-gray-500 hover:text-gray-900">
-                                Log out
-                            </Link>
                         </nav>
                     </div>
                 </header>

@@ -17,8 +17,11 @@ class ProfileController extends Controller
 
         $query = $user->posts()
             ->with(['user', 'repostOf.user'])
-            ->withCount(['likedBy as likes_count', 'replies', 'reposts'])
-            ->with(['likedBy' => fn ($q) => $q->where('users.id', $authUser->id)]);
+            ->withCount(['likedBy as likes_count', 'replies', 'reposts']);
+
+        if ($authUser) {
+            $query->with(['likedBy' => fn ($q) => $q->where('users.id', $authUser->id)]);
+        }
 
         if ($tab === 'replies') {
             $query->whereNotNull('parent_id')->with('parent.user');
@@ -27,17 +30,18 @@ class ProfileController extends Controller
         }
 
         $posts = $query->latest()->get()->each(function (Post $post) {
-            $post->liked = $post->likedBy->isNotEmpty();
+            $post->liked = $post->relationLoaded('likedBy') ? $post->likedBy->isNotEmpty() : false;
             unset($post->likedBy);
         });
 
         return Inertia::render('profile/show', [
             'profileUser' => $user->only(['id', 'username', 'display_name', 'avatar_url', 'bio']),
             'postsCount' => $user->posts()->whereNull('parent_id')->count(),
+            'repliesCount' => $user->posts()->whereNotNull('parent_id')->count(),
             'followersCount' => $user->followers()->count(),
             'followingCount' => $user->following()->count(),
-            'isFollowing' => $authUser->id === $user->id ? null : $authUser->isFollowing($user),
-            'isOwnProfile' => $authUser->id === $user->id,
+            'isFollowing' => $authUser && $authUser->id !== $user->id ? $authUser->isFollowing($user) : null,
+            'isOwnProfile' => $authUser?->id === $user->id,
             'tab' => $tab,
             'posts' => $posts,
         ]);
