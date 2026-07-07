@@ -9,8 +9,9 @@ export default function AppLayout({ children }: PropsWithChildren) {
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="border-b border-gray-200 bg-white">
-                <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
-                    <Link href="/" className="text-lg font-bold text-gray-900">
+                <div className="mx-auto flex h-14 max-w-2xl items-center justify-between px-4">
+                    <Link href="/" className="flex items-center gap-2 text-lg font-bold text-gray-900">
+                        <img src="/favicon.png" alt="" className="h-10 w-10 rounded-sm" />
                         Larpwitter
                     </Link>
                     <nav className="flex items-center gap-4 text-sm">

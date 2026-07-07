@@ -1,4 +1,5 @@
 import { Link, router } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import Avatar from '@/components/avatar';
 import { PostItem } from '@/types';
 
@@ -8,11 +9,28 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, linkToShow = true }: PostCardProps) {
+    const [liked, setLiked] = useState(post.liked);
+    const [likesCount, setLikesCount] = useState(post.likes_count);
+
+    useEffect(() => {
+        setLiked(post.liked);
+        setLikesCount(post.likes_count);
+    }, [post.liked, post.likes_count]);
+
     function toggleLike() {
-        if (post.liked) {
-            router.delete(`/posts/${post.id}/like`, { preserveScroll: true });
+        const wasLiked = liked;
+        setLiked(!wasLiked);
+        setLikesCount((count) => count + (wasLiked ? -1 : 1));
+
+        function revert() {
+            setLiked(wasLiked);
+            setLikesCount((count) => count + (wasLiked ? 1 : -1));
+        }
+
+        if (wasLiked) {
+            router.delete(`/posts/${post.id}/like`, { preserveScroll: true, preserveState: true, onError: revert });
         } else {
-            router.post(`/posts/${post.id}/like`, {}, { preserveScroll: true });
+            router.post(`/posts/${post.id}/like`, {}, { preserveScroll: true, preserveState: true, onError: revert });
         }
     }
 
@@ -34,9 +52,9 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                     <button
                         type="button"
                         onClick={toggleLike}
-                        className={`flex items-center gap-1 hover:text-rose-600 ${post.liked ? 'text-rose-600' : ''}`}
+                        className={`flex items-center gap-1 hover:text-rose-600 ${liked ? 'text-rose-600' : ''}`}
                     >
-                        {post.liked ? '♥' : '♡'} {post.likes_count}
+                        {liked ? '♥' : '♡'} {likesCount}
                     </button>
                     {linkToShow && (
                         <Link href={`/posts/${post.id}`} className="hover:text-sky-600">

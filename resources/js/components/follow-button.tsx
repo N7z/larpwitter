@@ -1,4 +1,5 @@
 import { router } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import Button from '@/components/button';
 
 interface FollowButtonProps {
@@ -7,11 +8,22 @@ interface FollowButtonProps {
 }
 
 export default function FollowButton({ username, isFollowing }: FollowButtonProps) {
+    const [following, setFollowing] = useState(isFollowing);
+
+    useEffect(() => {
+        setFollowing(isFollowing);
+    }, [isFollowing]);
+
     function toggle() {
-        if (isFollowing) {
-            router.delete(`/users/${username}/follow`, { preserveScroll: true });
+        const wasFollowing = following;
+        setFollowing(!wasFollowing);
+
+        const revert = () => setFollowing(wasFollowing);
+
+        if (wasFollowing) {
+            router.delete(`/users/${username}/follow`, { preserveScroll: true, preserveState: true, onError: revert });
         } else {
-            router.post(`/users/${username}/follow`, {}, { preserveScroll: true });
+            router.post(`/users/${username}/follow`, {}, { preserveScroll: true, preserveState: true, onError: revert });
         }
     }
 
@@ -19,9 +31,9 @@ export default function FollowButton({ username, isFollowing }: FollowButtonProp
         <Button
             type="button"
             onClick={toggle}
-            className={isFollowing ? '!bg-white !text-gray-900 border border-gray-300 hover:!bg-gray-100' : ''}
+            className={following ? '!bg-white !text-gray-900 border border-gray-300 hover:!bg-gray-100' : ''}
         >
-            {isFollowing ? 'Following' : 'Follow'}
+            {following ? 'Following' : 'Follow'}
         </Button>
     );
 }

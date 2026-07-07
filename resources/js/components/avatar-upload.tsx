@@ -1,7 +1,11 @@
 import { useForm } from '@inertiajs/react';
 import { ChangeEvent } from 'react';
 
-export default function AvatarUpload() {
+interface AvatarUploadProps {
+    onPreview?: (url: string) => void;
+}
+
+export default function AvatarUpload({ onPreview }: AvatarUploadProps) {
     const form = useForm<{ avatar: File | null }>({ avatar: null });
 
     function onFileChange(e: ChangeEvent<HTMLInputElement>) {
@@ -9,6 +13,8 @@ export default function AvatarUpload() {
         form.setData('avatar', file);
 
         if (file) {
+            onPreview?.(URL.createObjectURL(file));
+
             form.post('/profile/avatar', {
                 forceFormData: true,
                 preserveScroll: true,

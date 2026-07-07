@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import AvatarUpload from '@/components/avatar-upload';
 import Avatar from '@/components/avatar';
 import FollowButton from '@/components/follow-button';
@@ -24,23 +25,24 @@ export default function ProfileShow({
     isOwnProfile,
     posts,
 }: ProfileShowProps) {
+    const [avatarUrl, setAvatarUrl] = useState(profileUser.avatar_url);
+
+    useEffect(() => {
+        setAvatarUrl(profileUser.avatar_url);
+    }, [profileUser.avatar_url]);
+
     return (
         <AppLayout>
             <div className="mb-4 rounded-lg border border-gray-200 bg-white p-6">
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                        <Avatar
-                            username={profileUser.username}
-                            displayName={profileUser.display_name}
-                            avatarUrl={profileUser.avatar_url}
-                            size="lg"
-                        />
+                        <Avatar username={profileUser.username} displayName={profileUser.display_name} avatarUrl={avatarUrl} size="lg" />
                         <div>
                             <h1 className="text-xl font-bold text-gray-900">{profileUser.display_name}</h1>
                             <p className="text-sm text-gray-500">@{profileUser.username}</p>
                             {isOwnProfile && (
                                 <div className="mt-1">
-                                    <AvatarUpload />
+                                    <AvatarUpload onPreview={setAvatarUrl} />
                                 </div>
                             )}
                         </div>

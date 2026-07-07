@@ -1,8 +1,9 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import PostCard from '@/components/post-card';
 import PostComposer from '@/components/post-composer';
 import AppLayout from '@/layouts/app-layout';
-import { PostItem } from '@/types';
+import { PostItem, Shared } from '@/types';
 
 interface FeedIndexProps {
     posts: {
@@ -12,6 +13,33 @@ interface FeedIndexProps {
 }
 
 export default function FeedIndex({ posts, scope }: FeedIndexProps) {
+    const { auth } = usePage<Shared>().props;
+    const [items, setItems] = useState(posts.data);
+
+    useEffect(() => {
+        setItems(posts.data);
+    }, [posts.data]);
+
+    function handleOptimisticSubmit(body: string) {
+        if (!auth.user) {
+            return;
+        }
+
+        setItems((current) => [
+            {
+                id: -Date.now(),
+                body,
+                created_at: new Date().toISOString(),
+                user: auth.user!,
+                likes_count: 0,
+                replies_count: 0,
+                liked: false,
+                parent_id: null,
+            },
+            ...current,
+        ]);
+    }
+
     return (
         <AppLayout>
             <div className="mb-4 flex gap-4 border-b border-gray-200 text-sm font-medium">
@@ -35,13 +63,13 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
                 </Link>
             </div>
 
-            <PostComposer action="/posts" />
+            <PostComposer action="/posts" onOptimisticSubmit={handleOptimisticSubmit} />
 
             <div className="overflow-hidden rounded-lg border border-gray-200">
-                {posts.data.length === 0 ? (
+                {items.length === 0 ? (
                     <p className="p-6 text-center text-sm text-gray-500">No posts yet.</p>
                 ) : (
-                    posts.data.map((post) => <PostCard key={post.id} post={post} />)
+                    items.map((post) => <PostCard key={post.id} post={post} />)
                 )}
             </div>
         </AppLayout>
