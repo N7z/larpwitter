@@ -2,13 +2,14 @@ import { Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import AvatarUpload from '@/components/avatar-upload';
 import Avatar from '@/components/avatar';
+import BioEditor from '@/components/bio-editor';
 import FollowButton from '@/components/follow-button';
 import PostCard from '@/components/post-card';
 import AppLayout from '@/layouts/app-layout';
-import { PostItem, UserInfo } from '@/types';
+import { PostItem, ProfileUser } from '@/types';
 
 interface ProfileShowProps {
-    profileUser: UserInfo;
+    profileUser: ProfileUser;
     postsCount: number;
     followersCount: number;
     followingCount: number;
@@ -29,10 +30,15 @@ export default function ProfileShow({
     posts,
 }: ProfileShowProps) {
     const [avatarUrl, setAvatarUrl] = useState(profileUser.avatar_url);
+    const [bio, setBio] = useState(profileUser.bio);
 
     useEffect(() => {
         setAvatarUrl(profileUser.avatar_url);
     }, [profileUser.avatar_url]);
+
+    useEffect(() => {
+        setBio(profileUser.bio);
+    }, [profileUser.bio]);
 
     return (
         <AppLayout>
@@ -52,6 +58,15 @@ export default function ProfileShow({
                     </div>
                     {isFollowing !== null && <FollowButton username={profileUser.username} isFollowing={isFollowing} />}
                 </div>
+
+                <div className="mt-3">
+                    {isOwnProfile ? (
+                        <BioEditor bio={bio} onSaved={setBio} />
+                    ) : (
+                        bio && <p className="text-sm whitespace-pre-wrap text-gray-700">{bio}</p>
+                    )}
+                </div>
+
                 <div className="mt-4 flex gap-4 text-sm text-gray-600">
                     <span>
                         <strong className="text-gray-900">{postsCount}</strong> posts

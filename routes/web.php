@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AvatarController;
+use App\Http\Controllers\BioController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NotificationController;
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('u/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 
     Route::post('profile/avatar', [AvatarController::class, 'store'])->name('avatar.store');
+    Route::post('profile/bio', [BioController::class, 'store'])->name('bio.store');
 
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
 });

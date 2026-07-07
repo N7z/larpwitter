@@ -5,6 +5,10 @@ export interface UserInfo {
     avatar_url: string | null;
 }
 
+export interface ProfileUser extends UserInfo {
+    bio: string | null;
+}
+
 export interface RepostTarget {
     id: number;
     body: string;
