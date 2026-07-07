@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\UserFollowed;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -17,7 +18,11 @@ class FollowController extends Controller
             ]);
         }
 
-        $request->user()->following()->syncWithoutDetaching([$user->id]);
+        $result = $request->user()->following()->syncWithoutDetaching([$user->id]);
+
+        if (! empty($result['attached'])) {
+            $user->notify(new UserFollowed($request->user()));
+        }
 
         return redirect()->back();
     }

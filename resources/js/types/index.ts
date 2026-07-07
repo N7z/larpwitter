@@ -27,8 +27,19 @@ export interface PostItem {
     repost_of: RepostTarget | null;
 }
 
+export interface NotificationItem {
+    id: string;
+    type: 'like' | 'reply' | 'repost' | 'follow';
+    actor: UserInfo | null;
+    post_id: number | null;
+    is_quote: boolean;
+    is_new: boolean;
+    created_at: string;
+}
+
 export interface Shared {
     auth: { user: UserInfo | null };
     flash: { status: string | null };
+    unreadNotificationsCount: number;
     [key: string]: unknown;
 }

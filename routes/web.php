@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
@@ -41,4 +42,6 @@ Route::middleware('auth')->group(function () {
     Route::get('u/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 
     Route::post('profile/avatar', [AvatarController::class, 'store'])->name('avatar.store');
+
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRepostRequest;
 use App\Models\Post;
+use App\Notifications\PostReposted;
 use Illuminate\Http\RedirectResponse;
 
 class RepostController extends Controller
@@ -12,10 +13,14 @@ class RepostController extends Controller
     {
         $original = $post->isRepost() ? $post->repostOf : $post;
 
-        $request->user()->posts()->create([
+        $repost = $request->user()->posts()->create([
             'repost_of_id' => $original->id,
             'body' => $request->body ?? '',
         ]);
+
+        if ($original->user_id !== $request->user()->id) {
+            $original->user->notify(new PostReposted($request->user(), $repost));
+        }
 
         return redirect()->back();
     }
