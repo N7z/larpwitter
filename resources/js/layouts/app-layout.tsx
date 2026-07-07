@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
+import Avatar from '@/components/avatar';
 import { Shared } from '@/types';
 
 export default function AppLayout({ children }: PropsWithChildren) {
@@ -14,7 +15,13 @@ export default function AppLayout({ children }: PropsWithChildren) {
                     </Link>
                     <nav className="flex items-center gap-4 text-sm">
                         {auth.user && (
-                            <Link href={`/u/${auth.user.username}`} className="text-gray-700 hover:underline">
+                            <Link href={`/u/${auth.user.username}`} className="flex items-center gap-2 text-gray-700 hover:underline">
+                                <Avatar
+                                    username={auth.user.username}
+                                    displayName={auth.user.display_name}
+                                    avatarUrl={auth.user.avatar_url}
+                                    size="sm"
+                                />
                                 @{auth.user.username}
                             </Link>
                         )}

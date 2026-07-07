@@ -2,6 +2,7 @@ export interface UserInfo {
     id: number;
     username: string;
     display_name: string;
+    avatar_url: string | null;
 }
 
 export interface PostItem {

@@ -1,3 +1,5 @@
+import AvatarUpload from '@/components/avatar-upload';
+import Avatar from '@/components/avatar';
 import FollowButton from '@/components/follow-button';
 import PostCard from '@/components/post-card';
 import AppLayout from '@/layouts/app-layout';
@@ -9,17 +11,39 @@ interface ProfileShowProps {
     followersCount: number;
     followingCount: number;
     isFollowing: boolean | null;
+    isOwnProfile: boolean;
     posts: PostItem[];
 }
 
-export default function ProfileShow({ profileUser, postsCount, followersCount, followingCount, isFollowing, posts }: ProfileShowProps) {
+export default function ProfileShow({
+    profileUser,
+    postsCount,
+    followersCount,
+    followingCount,
+    isFollowing,
+    isOwnProfile,
+    posts,
+}: ProfileShowProps) {
     return (
         <AppLayout>
             <div className="mb-4 rounded-lg border border-gray-200 bg-white p-6">
                 <div className="flex items-start justify-between">
-                    <div>
-                        <h1 className="text-xl font-bold text-gray-900">{profileUser.display_name}</h1>
-                        <p className="text-sm text-gray-500">@{profileUser.username}</p>
+                    <div className="flex items-center gap-4">
+                        <Avatar
+                            username={profileUser.username}
+                            displayName={profileUser.display_name}
+                            avatarUrl={profileUser.avatar_url}
+                            size="lg"
+                        />
+                        <div>
+                            <h1 className="text-xl font-bold text-gray-900">{profileUser.display_name}</h1>
+                            <p className="text-sm text-gray-500">@{profileUser.username}</p>
+                            {isOwnProfile && (
+                                <div className="mt-1">
+                                    <AvatarUpload />
+                                </div>
+                            )}
+                        </div>
                     </div>
                     {isFollowing !== null && <FollowButton username={profileUser.username} isFollowing={isFollowing} />}
                 </div>
