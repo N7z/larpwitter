@@ -16,9 +16,11 @@ export default function PostComposer({ action, placeholder = "What's happening?"
         const body = form.data.body;
 
         onOptimisticSubmit?.(body);
-        form.reset('body');
 
-        form.post(action, { preserveScroll: true });
+        form.post(action, {
+            preserveScroll: true,
+            onSuccess: () => form.reset('body'),
+        });
     }
 
     const remaining = 280 - form.data.body.length;
