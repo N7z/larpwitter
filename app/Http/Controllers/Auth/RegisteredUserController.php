@@ -29,6 +29,10 @@ class RegisteredUserController extends Controller
             'password' => $request->password,
         ]);
 
+        if ($official = User::where('username', 'larpwitter')->first()) {
+            $user->following()->syncWithoutDetaching([$official->id]);
+        }
+
         Auth::login($user);
 
         return redirect()->route('feed');
