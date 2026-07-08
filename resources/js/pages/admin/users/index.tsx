@@ -2,6 +2,7 @@ import { router, usePage } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 import Avatar from '@/components/avatar';
 import ConfirmDialog from '@/components/confirm-dialog';
+import Seo from '@/components/seo';
 import UserBadge from '@/components/user-badge';
 import AdminLayout from '@/layouts/admin-layout';
 import { AdminUserRow, Paginated, Shared } from '@/types';
@@ -34,6 +35,8 @@ export default function AdminUsersIndex({ users, search }: AdminUsersIndexProps)
 
     return (
         <AdminLayout>
+            <Seo title="Admin · Users" noindex />
+
             <h1 className="mb-4 text-xl font-bold text-gray-900">Users</h1>
 
             <form onSubmit={submitSearch} className="mb-4 flex gap-2">

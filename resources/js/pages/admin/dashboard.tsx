@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import Seo from '@/components/seo';
 import AdminLayout from '@/layouts/admin-layout';
 import { AdminRecentUser, AdminStats } from '@/types';
 
@@ -20,6 +21,8 @@ const STAT_LABELS: { key: keyof AdminStats; label: string }[] = [
 export default function AdminDashboard({ stats, recentUsers }: AdminDashboardProps) {
     return (
         <AdminLayout>
+            <Seo title="Admin · Dashboard" noindex />
+
             <h1 className="mb-4 text-xl font-bold text-gray-900">Dashboard</h1>
 
             <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">

@@ -1,6 +1,7 @@
 import { AnimatePresence } from 'motion/react';
 import { useEffect, useState } from 'react';
 import PostCard from '@/components/post-card';
+import Seo from '@/components/seo';
 import AppLayout from '@/layouts/app-layout';
 import { PostItem } from '@/types';
 
@@ -20,6 +21,8 @@ export default function HashtagShow({ hashtag, posts }: HashtagShowProps) {
 
     return (
         <AppLayout>
+            <Seo title={`#${hashtag}`} description={`Browse posts tagged #${hashtag} on Larpwitter.`} />
+
             <h1 className="mb-4 text-xl font-bold text-gray-900">#{hashtag}</h1>
 
             <div className="overflow-hidden rounded-lg border border-gray-200">

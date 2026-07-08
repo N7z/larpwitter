@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 import Avatar from '@/components/avatar';
 import ConfirmDialog from '@/components/confirm-dialog';
+import Seo from '@/components/seo';
 import UserBadge from '@/components/user-badge';
 import AdminLayout from '@/layouts/admin-layout';
 import { AdminPostRow, Paginated } from '@/types';
@@ -32,6 +33,8 @@ export default function AdminPostsIndex({ posts, search }: AdminPostsIndexProps)
 
     return (
         <AdminLayout>
+            <Seo title="Admin · Posts" noindex />
+
             <h1 className="mb-4 text-xl font-bold text-gray-900">Posts</h1>
 
             <form onSubmit={submitSearch} className="mb-4 flex gap-2">

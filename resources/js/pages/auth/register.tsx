@@ -1,6 +1,7 @@
 import { Link, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
 import Button from '@/components/button';
+import Seo from '@/components/seo';
 import TextField from '@/components/text-field';
 import GuestLayout from '@/layouts/guest-layout';
 
@@ -21,6 +22,8 @@ export default function Register() {
 
     return (
         <GuestLayout>
+            <Seo title="Sign up" description="Create a Larpwitter account and join the larping community." />
+
             <form onSubmit={submit}>
                 <TextField
                     label="Username"

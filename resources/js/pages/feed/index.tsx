@@ -3,6 +3,7 @@ import { AnimatePresence } from 'motion/react';
 import { useEffect, useState } from 'react';
 import PostCard from '@/components/post-card';
 import PostComposer from '@/components/post-composer';
+import Seo from '@/components/seo';
 import AppLayout from '@/layouts/app-layout';
 import { PostItem, Shared } from '@/types';
 
@@ -23,6 +24,11 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
 
     return (
         <AppLayout>
+            <Seo
+                title={scope === 'following' ? 'Following' : 'Home'}
+                description="See what larpers are posting right now, in character or out."
+            />
+
             <div className="mb-4 flex gap-4 border-b border-gray-200 text-sm font-medium">
                 <Link
                     href="/?scope=global"

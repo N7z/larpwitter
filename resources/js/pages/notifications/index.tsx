@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { AtSign, BadgeCheck, Heart, MessageCircle, Repeat2, ShieldCheck, Trash2, UserPlus } from 'lucide-react';
 import Avatar from '@/components/avatar';
+import Seo from '@/components/seo';
 import AppLayout from '@/layouts/app-layout';
 import { NotificationItem } from '@/types';
 
@@ -45,6 +46,8 @@ function message(notification: NotificationItem): string {
 export default function NotificationsIndex({ notifications }: NotificationsIndexProps) {
     return (
         <AppLayout>
+            <Seo title="Notifications" noindex />
+
             <h1 className="mb-4 text-xl font-bold text-gray-900">Notifications</h1>
 
             <div className="overflow-hidden rounded-lg border border-gray-200">

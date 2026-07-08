@@ -3,6 +3,7 @@ import { Bell } from 'lucide-react';
 import { MotionConfig } from 'motion/react';
 import { PropsWithChildren } from 'react';
 import Avatar from '@/components/avatar';
+import Footer from '@/components/footer';
 import RightSidebar from '@/components/right-sidebar';
 import { Shared } from '@/types';
 
@@ -66,6 +67,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                         <RightSidebar />
                     </aside>
                 </div>
+                <Footer />
             </div>
         </MotionConfig>
     );

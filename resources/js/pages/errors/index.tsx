@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import Seo from '@/components/seo';
 import AppLayout from '@/layouts/app-layout';
 
 interface ErrorPageProps {
@@ -22,6 +23,8 @@ export default function ErrorPage({ status }: ErrorPageProps) {
 
     return (
         <AppLayout>
+            <Seo title={title} description={description} noindex />
+
             <div className="flex flex-col items-center rounded-lg border border-gray-200 bg-white px-6 py-16 text-center">
                 <p className="text-6xl font-black text-sky-500">{status}</p>
                 <h1 className="mt-4 text-xl font-bold text-gray-900">{title}</h1>

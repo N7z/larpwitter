@@ -1,6 +1,7 @@
 import { Link, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
 import Button from '@/components/button';
+import Seo from '@/components/seo';
 import TextField from '@/components/text-field';
 import GuestLayout from '@/layouts/guest-layout';
 
@@ -19,6 +20,8 @@ export default function Login() {
 
     return (
         <GuestLayout>
+            <Seo title="Log in" description="Log in to Larpwitter to post, follow and reply." />
+
             <form onSubmit={submit}>
                 <TextField
                     label="Username"

@@ -3,7 +3,9 @@ import { AnimatePresence } from 'motion/react';
 import { useEffect, useState } from 'react';
 import PostCard from '@/components/post-card';
 import PostComposer from '@/components/post-composer';
+import Seo from '@/components/seo';
 import AppLayout from '@/layouts/app-layout';
+import { excerpt } from '@/lib/text';
 import { PostItem, Shared } from '@/types';
 
 interface PostShowProps {
@@ -21,6 +23,12 @@ export default function PostShow({ post, replies }: PostShowProps) {
 
     return (
         <AppLayout>
+            <Seo
+                title={`${post.user.display_name} (@${post.user.username})`}
+                description={post.body ? excerpt(post.body) : `A post by @${post.user.username} on Larpwitter.`}
+                image={post.image_url ?? undefined}
+            />
+
             <div className="overflow-hidden rounded-lg border border-gray-200">
                 <PostCard post={post} linkToShow={false} />
             </div>
