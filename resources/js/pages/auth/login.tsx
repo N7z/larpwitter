@@ -3,12 +3,18 @@ import { FormEvent } from 'react';
 import Button from '@/components/button';
 import Seo from '@/components/seo';
 import TextField from '@/components/text-field';
+import Turnstile from '@/components/turnstile';
 import GuestLayout from '@/layouts/guest-layout';
 
-export default function Login() {
+interface LoginProps {
+    turnstileSiteKey: string;
+}
+
+export default function Login({ turnstileSiteKey }: LoginProps) {
     const form = useForm({
         username: '',
         password: '',
+        'cf-turnstile-response': '',
     });
 
     function submit(e: FormEvent) {
@@ -36,6 +42,11 @@ export default function Login() {
                     value={form.data.password}
                     onChange={(e) => form.setData('password', e.target.value)}
                     error={form.errors.password}
+                />
+                <Turnstile
+                    siteKey={turnstileSiteKey}
+                    onVerify={(token) => form.setData('cf-turnstile-response', token)}
+                    error={form.errors['cf-turnstile-response']}
                 />
                 <Button type="submit" disabled={form.processing} className="w-full">
                     Log in

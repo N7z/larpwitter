@@ -15,7 +15,17 @@ export default function PostEmbed({ post }: PostEmbedProps) {
                 <span className="text-sm text-gray-500">@{post.user.username}</span>
             </div>
             {post.body && <p className="mt-1 line-clamp-4 text-sm whitespace-pre-wrap text-gray-800">{post.body}</p>}
-            {post.image_url && <img src={post.image_url} alt="" className="mt-2 max-h-64 w-full rounded-md object-cover" />}
+            {post.image_url && (
+                <div className="relative mt-2 h-64 w-full overflow-hidden rounded-md bg-gray-100">
+                    <img
+                        src={post.image_url}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-xl"
+                    />
+                    <img src={post.image_url} alt="" className="relative h-full w-full object-contain" />
+                </div>
+            )}
         </Link>
     );
 }

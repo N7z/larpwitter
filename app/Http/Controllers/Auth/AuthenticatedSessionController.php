@@ -14,7 +14,9 @@ class AuthenticatedSessionController extends Controller
 {
     public function create(): Response
     {
-        return Inertia::render('auth/login')->withViewData(['seo' => [
+        return Inertia::render('auth/login', [
+            'turnstileSiteKey' => config('services.turnstile.site_key'),
+        ])->withViewData(['seo' => [
             'title' => 'Log in',
             'description' => 'Log in to Larpwitter to post, follow and reply.',
         ]]);

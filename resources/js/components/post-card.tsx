@@ -98,11 +98,15 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                 </div>
                 {post.body && <RichText text={post.body} className="mt-1 whitespace-pre-wrap text-gray-900" />}
                 {post.image_url && (
-                    <img
-                        src={post.image_url}
-                        alt=""
-                        className="mt-2 max-h-96 w-full rounded-lg border border-gray-200 object-cover"
-                    />
+                    <div className="relative mt-2 h-96 w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                        <img
+                            src={post.image_url}
+                            alt=""
+                            aria-hidden="true"
+                            className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-xl"
+                        />
+                        <img src={post.image_url} alt="" className="relative h-full w-full object-contain" />
+                    </div>
                 )}
                 {post.repost_of && <PostEmbed post={post.repost_of} />}
                 <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">

@@ -13,7 +13,9 @@ class RegisteredUserController extends Controller
 {
     public function create(): Response
     {
-        return Inertia::render('auth/register')->withViewData(['seo' => [
+        return Inertia::render('auth/register', [
+            'turnstileSiteKey' => config('services.turnstile.site_key'),
+        ])->withViewData(['seo' => [
             'title' => 'Sign up',
             'description' => 'Create a Larpwitter account and join the larping community.',
         ]]);

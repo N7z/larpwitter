@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\Turnstile;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -22,6 +23,7 @@ class RegisterRequest extends FormRequest
             'username' => ['required', 'string', 'min:3', 'max:30', 'regex:/^[a-z0-9_]+$/', Rule::unique('users', 'username')],
             'display_name' => ['required', 'string', 'max:50'],
             'password' => ['required', 'confirmed', Password::defaults()],
+            'cf-turnstile-response' => ['required', 'string', new Turnstile],
         ];
     }
 

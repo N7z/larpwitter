@@ -3,14 +3,20 @@ import { FormEvent } from 'react';
 import Button from '@/components/button';
 import Seo from '@/components/seo';
 import TextField from '@/components/text-field';
+import Turnstile from '@/components/turnstile';
 import GuestLayout from '@/layouts/guest-layout';
 
-export default function Register() {
+interface RegisterProps {
+    turnstileSiteKey: string;
+}
+
+export default function Register({ turnstileSiteKey }: RegisterProps) {
     const form = useForm({
         username: '',
         display_name: '',
         password: '',
         password_confirmation: '',
+        'cf-turnstile-response': '',
     });
 
     function submit(e: FormEvent) {
@@ -50,6 +56,11 @@ export default function Register() {
                     type="password"
                     value={form.data.password_confirmation}
                     onChange={(e) => form.setData('password_confirmation', e.target.value)}
+                />
+                <Turnstile
+                    siteKey={turnstileSiteKey}
+                    onVerify={(token) => form.setData('cf-turnstile-response', token)}
+                    error={form.errors['cf-turnstile-response']}
                 />
                 <Button type="submit" disabled={form.processing} className="w-full">
                     Register
