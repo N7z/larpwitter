@@ -7,12 +7,20 @@ import Seo from '@/components/seo';
 import AppLayout from '@/layouts/app-layout';
 import { PostItem, Shared } from '@/types';
 
+type Scope = 'for_you' | 'following' | 'global';
+
 interface FeedIndexProps {
     posts: {
         data: PostItem[];
     };
-    scope: 'global' | 'following';
+    scope: Scope;
 }
+
+const SCOPE_TITLES: Record<Scope, string> = {
+    for_you: 'For You',
+    following: 'Following',
+    global: 'Home',
+};
 
 export default function FeedIndex({ posts, scope }: FeedIndexProps) {
     const { auth } = usePage<Shared>().props;
@@ -22,35 +30,35 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
         setItems(posts.data);
     }, [posts.data]);
 
+    const tabs: { key: Scope; label: string }[] = [
+        ...(auth.user
+            ? [
+                  { key: 'for_you' as const, label: 'For You' },
+                  { key: 'following' as const, label: 'Following' },
+              ]
+            : []),
+        { key: 'global' as const, label: 'Global' },
+    ];
+
     return (
         <AppLayout>
-            <Seo title={scope === 'following' ? 'Following' : 'Home'} />
+            <Seo title={SCOPE_TITLES[scope]} />
 
             <div className="mb-4 flex gap-4 border-b border-gray-200 text-sm font-medium dark:border-gray-800">
-                <Link
-                    href="/?scope=global"
-                    preserveState
-                    className={`-mb-px border-b-2 px-1 pb-2 ${
-                        scope === 'global'
-                            ? 'border-sky-500 text-sky-600 dark:text-sky-400'
-                            : 'border-transparent text-gray-500 dark:text-gray-400'
-                    }`}
-                >
-                    Global
-                </Link>
-                {auth.user && (
+                {tabs.map((tab) => (
                     <Link
-                        href="/?scope=following"
+                        key={tab.key}
+                        href={`/?scope=${tab.key}`}
                         preserveState
                         className={`-mb-px border-b-2 px-1 pb-2 ${
-                            scope === 'following'
+                            scope === tab.key
                                 ? 'border-sky-500 text-sky-600 dark:text-sky-400'
                                 : 'border-transparent text-gray-500 dark:text-gray-400'
                         }`}
                     >
-                        Following
+                        {tab.label}
                     </Link>
-                )}
+                ))}
             </div>
 
             {auth.user ? (
