@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('profile/display-name', [DisplayNameController::class, 'store'])->name('display-name.store');
 
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/latest', [NotificationController::class, 'latest'])->name('notifications.latest');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

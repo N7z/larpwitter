@@ -6,10 +6,13 @@ import Avatar from '@/components/avatar';
 import Footer from '@/components/footer';
 import RightSidebar from '@/components/right-sidebar';
 import ThemeToggle from '@/components/theme-toggle';
+import { useBrowserNotifications } from '@/hooks/use-browser-notifications';
 import { Shared } from '@/types';
 
 export default function AppLayout({ children }: PropsWithChildren) {
     const { auth, unreadNotificationsCount } = usePage<Shared>().props;
+
+    useBrowserNotifications(auth.user?.id ?? null);
 
     return (
         <MotionConfig reducedMotion="user">

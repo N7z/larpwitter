@@ -1,8 +1,10 @@
 import { Link } from '@inertiajs/react';
 import { AtSign, BadgeCheck, Heart, MessageCircle, Repeat2, ShieldCheck, Trash2, UserPlus } from 'lucide-react';
 import Avatar from '@/components/avatar';
+import NotificationPermissionButton from '@/components/notification-permission-button';
 import Seo from '@/components/seo';
 import AppLayout from '@/layouts/app-layout';
+import { notificationHref, notificationMessage } from '@/lib/notifications';
 import { NotificationItem } from '@/types';
 
 interface NotificationsIndexProps {
@@ -20,35 +22,15 @@ const ICONS = {
     post_removed: Trash2,
 };
 
-function message(notification: NotificationItem): string {
-    const name = notification.actor?.display_name ?? 'Someone';
-
-    switch (notification.type) {
-        case 'like':
-            return `${name} liked your post`;
-        case 'reply':
-            return `${name} replied to your post`;
-        case 'repost':
-            return notification.is_quote ? `${name} quoted your post` : `${name} reposted your post`;
-        case 'follow':
-            return `${name} started following you`;
-        case 'mention':
-            return `${name} mentioned you`;
-        case 'verified':
-            return `${name} verified your account`;
-        case 'admin':
-            return `${name} made you an admin`;
-        case 'post_removed':
-            return `${name} removed one of your posts`;
-    }
-}
-
 export default function NotificationsIndex({ notifications }: NotificationsIndexProps) {
     return (
         <AppLayout>
             <Seo title="Notifications" />
 
-            <h1 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">Notifications</h1>
+            <div className="mb-4 flex items-center justify-between gap-3">
+                <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Notifications</h1>
+                <NotificationPermissionButton />
+            </div>
 
             <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800">
                 {notifications.length === 0 ? (
@@ -56,14 +38,7 @@ export default function NotificationsIndex({ notifications }: NotificationsIndex
                 ) : (
                     notifications.map((notification) => {
                         const Icon = ICONS[notification.type];
-                        const linksToActor = notification.type === 'follow' || notification.type === 'verified' || notification.type === 'admin';
-                        const href = linksToActor
-                            ? notification.actor
-                                ? `/u/${notification.actor.username}`
-                                : null
-                            : notification.post_id
-                              ? `/posts/${notification.post_id}`
-                              : null;
+                        const href = notificationHref(notification);
 
                         const rowClassName = `flex items-center gap-3 border-b border-gray-200 p-4 dark:border-gray-800 ${
                             notification.is_new ? 'bg-sky-50 dark:bg-sky-950/40' : 'bg-white dark:bg-gray-900'
@@ -81,7 +56,7 @@ export default function NotificationsIndex({ notifications }: NotificationsIndex
                                     />
                                 )}
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm text-gray-900 dark:text-gray-100">{message(notification)}</p>
+                                    <p className="text-sm text-gray-900 dark:text-gray-100">{notificationMessage(notification)}</p>
                                     {notification.type === 'post_removed' && notification.excerpt && (
                                         <p className="mt-0.5 truncate text-xs text-gray-500 italic dark:text-gray-400">
                                             "{notification.excerpt}"
