@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import AvatarUpload from '@/components/avatar-upload';
 import Avatar from '@/components/avatar';
 import BioEditor from '@/components/bio-editor';
+import DisplayNameEditor from '@/components/display-name-editor';
 import FollowButton from '@/components/follow-button';
 import PostCard from '@/components/post-card';
 import Seo from '@/components/seo';
@@ -35,6 +36,7 @@ export default function ProfileShow({
 }: ProfileShowProps) {
     const [avatarUrl, setAvatarUrl] = useState(profileUser.avatar_url);
     const [bio, setBio] = useState(profileUser.bio);
+    const [displayName, setDisplayName] = useState(profileUser.display_name);
 
     useEffect(() => {
         setAvatarUrl(profileUser.avatar_url);
@@ -43,6 +45,10 @@ export default function ProfileShow({
     useEffect(() => {
         setBio(profileUser.bio);
     }, [profileUser.bio]);
+
+    useEffect(() => {
+        setDisplayName(profileUser.display_name);
+    }, [profileUser.display_name]);
 
     return (
         <AppLayout>
@@ -54,13 +60,14 @@ export default function ProfileShow({
                         <Avatar username={profileUser.username} displayName={profileUser.display_name} avatarUrl={avatarUrl} size="lg" />
                         <div>
                             <h1 className="flex items-center gap-1 text-xl font-bold text-gray-900">
-                                {profileUser.display_name}
+                                {displayName}
                                 <UserBadge user={profileUser} className="h-5 w-5" />
                             </h1>
                             <p className="text-sm text-gray-500">@{profileUser.username}</p>
                             {isOwnProfile && (
-                                <div className="mt-1">
+                                <div className="mt-1 flex items-center gap-3">
                                     <AvatarUpload onPreview={setAvatarUrl} />
+                                    <DisplayNameEditor displayName={displayName} onSaved={setDisplayName} />
                                 </div>
                             )}
                         </div>

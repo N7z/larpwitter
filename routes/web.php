@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\BioController;
+use App\Http\Controllers\DisplayNameController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HashtagController;
 use App\Http\Controllers\LikeController;
@@ -54,6 +55,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('profile/avatar', [AvatarController::class, 'store'])->name('avatar.store');
     Route::post('profile/bio', [BioController::class, 'store'])->name('bio.store');
+    Route::post('profile/display-name', [DisplayNameController::class, 'store'])->name('display-name.store');
 
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
 });
