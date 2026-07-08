@@ -5,7 +5,7 @@ import ConfirmDialog from '@/components/confirm-dialog';
 import Seo from '@/components/seo';
 import UserBadge from '@/components/user-badge';
 import AdminLayout from '@/layouts/admin-layout';
-import { AdminUserRow, Paginated, Shared } from '@/types';
+import { AdminUserRow, Paginated, Shared, VerificationType } from '@/types';
 
 interface AdminUsersIndexProps {
     users: Paginated<AdminUserRow>;
@@ -25,8 +25,8 @@ export default function AdminUsersIndex({ users, search }: AdminUsersIndexProps)
         router.patch(`/admin/users/${userId}/toggle-admin`, {}, { preserveScroll: true });
     }
 
-    function toggleVerified(userId: number) {
-        router.patch(`/admin/users/${userId}/toggle-verified`, {}, { preserveScroll: true });
+    function updateVerification(userId: number, type: VerificationType) {
+        router.patch(`/admin/users/${userId}/verification`, { type }, { preserveScroll: true });
     }
 
     function deleteUser(userId: number) {
@@ -83,13 +83,15 @@ export default function AdminUsersIndex({ users, search }: AdminUsersIndexProps)
                             </div>
 
                             <div className="flex shrink-0 items-center gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => toggleVerified(user.id)}
-                                    className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                                <select
+                                    value={user.is_verified}
+                                    onChange={(event) => updateVerification(user.id, Number(event.target.value) as VerificationType)}
+                                    className="rounded-lg border border-gray-300 px-2 py-1.5 text-xs font-medium text-gray-600 focus:border-sky-500 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
                                 >
-                                    {user.is_verified ? 'Unverify' : 'Verify'}
-                                </button>
+                                    <option value={0}>Not verified</option>
+                                    <option value={1}>Verified</option>
+                                    <option value={2}>Company</option>
+                                </select>
                                 {user.id !== auth.user?.id && (
                                     <>
                                         <button

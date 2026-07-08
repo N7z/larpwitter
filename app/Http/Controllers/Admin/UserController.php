@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\VerificationType;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\UserPromotedToAdmin;
 use App\Notifications\UserVerified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,12 +49,18 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function toggleVerified(Request $request, User $user): RedirectResponse
+    public function updateVerification(Request $request, User $user): RedirectResponse
     {
-        $user->is_verified = ! $user->is_verified;
+        $request->validate([
+            'type' => ['required', new Enum(VerificationType::class)],
+        ]);
+
+        $type = VerificationType::from($request->integer('type'));
+
+        $user->is_verified = $type;
         $user->save();
 
-        if ($user->is_verified && $user->id !== $request->user()->id) {
+        if ($type !== VerificationType::None && $user->id !== $request->user()->id) {
             $user->notify(new UserVerified($request->user()));
         }
 

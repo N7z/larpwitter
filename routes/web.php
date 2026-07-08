@@ -65,7 +65,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
     Route::patch('users/{user}/toggle-admin', [AdminUserController::class, 'toggleAdmin'])->name('users.toggle-admin');
-    Route::patch('users/{user}/toggle-verified', [AdminUserController::class, 'toggleVerified'])->name('users.toggle-verified');
+    Route::patch('users/{user}/verification', [AdminUserController::class, 'updateVerification'])->name('users.update-verification');
     Route::delete('users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 
     Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');

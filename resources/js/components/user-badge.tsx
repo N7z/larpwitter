@@ -12,8 +12,12 @@ export default function UserBadge({ user, className = 'h-4 w-4' }: UserBadgeProp
         return <ShieldCheck className={`inline shrink-0 fill-yellow-400 stroke-yellow-600 ${className}`} aria-label="Admin" />;
     }
 
-    if (user.is_verified) {
-        return <VerifiedBadge className={className} />;
+    if (user.is_verified === 2) {
+        return <VerifiedBadge className={className} variant="company" />;
+    }
+
+    if (user.is_verified === 1) {
+        return <VerifiedBadge className={className} variant="verified" />;
     }
 
     return null;

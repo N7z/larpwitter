@@ -1,10 +1,25 @@
-export default function VerifiedBadge({ className = 'h-4 w-4' }: { className?: string }) {
+interface VerifiedBadgeProps {
+    className?: string;
+    variant?: 'verified' | 'company';
+}
+
+const VARIANT_COLORS = {
+    verified: 'text-sky-500',
+    company: 'text-yellow-500',
+};
+
+const VARIANT_LABELS = {
+    verified: 'Verified',
+    company: 'Verified company',
+};
+
+export default function VerifiedBadge({ className = 'h-4 w-4', variant = 'verified' }: VerifiedBadgeProps) {
     return (
         <svg
             viewBox="0 0 24 24"
             role="img"
-            aria-label="Verified"
-            className={`inline shrink-0 text-sky-500 ${className}`}
+            aria-label={VARIANT_LABELS[variant]}
+            className={`inline shrink-0 ${VARIANT_COLORS[variant]} ${className}`}
         >
             <path
                 fill="currentColor"

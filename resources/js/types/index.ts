@@ -1,10 +1,16 @@
+export type VerificationType = 0 | 1 | 2;
+
+export const VERIFICATION_NONE: VerificationType = 0;
+export const VERIFICATION_VERIFIED: VerificationType = 1;
+export const VERIFICATION_COMPANY: VerificationType = 2;
+
 export interface UserInfo {
     id: number;
     username: string;
     display_name: string;
     avatar_url: string | null;
     is_admin?: boolean;
-    is_verified?: boolean;
+    is_verified?: VerificationType;
 }
 
 export interface ProfileUser extends UserInfo {
@@ -96,7 +102,7 @@ export interface AdminUserRow {
     display_name: string;
     avatar_url: string | null;
     is_admin: boolean;
-    is_verified: boolean;
+    is_verified: VerificationType;
     created_at: string;
     posts_count: number;
     followers_count: number;
