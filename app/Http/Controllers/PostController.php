@@ -55,7 +55,7 @@ class PostController extends Controller
 
         return in_array($requested, ['for_you', 'following', 'global'], true)
             ? $requested
-            : 'for_you';
+            : 'global';
     }
 
     private function timelineFeed(Request $request, ?User $user, string $scope): LengthAwarePaginator
