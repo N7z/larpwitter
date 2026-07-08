@@ -68,3 +68,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');
     Route::delete('posts/{post}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
 });
+
+Route::fallback(fn () => abort(404));
