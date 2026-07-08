@@ -32,7 +32,7 @@ export default function FollowButton({ username, isFollowing, className = '' }: 
         <Button
             type="button"
             onClick={toggle}
-            className={`${following ? '!bg-white !text-gray-900 border border-gray-300 hover:!bg-gray-100' : ''} ${className}`}
+            className={`${following ? '!bg-white !text-gray-900 border border-gray-300 hover:!bg-gray-100 dark:!bg-gray-900 dark:!text-gray-100 dark:border-gray-700 dark:hover:!bg-gray-800' : ''} ${className}`}
         >
             {following ? 'Following' : 'Follow'}
         </Button>

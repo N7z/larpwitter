@@ -23,31 +23,39 @@ export default function AdminDashboard({ stats, recentUsers }: AdminDashboardPro
         <AdminLayout>
             <Seo title="Admin · Dashboard" />
 
-            <h1 className="mb-4 text-xl font-bold text-gray-900">Dashboard</h1>
+            <h1 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
 
             <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {STAT_LABELS.map(({ key, label }) => (
-                    <div key={key} className="rounded-lg border border-gray-200 bg-white p-4">
-                        <p className="text-2xl font-bold text-gray-900">{stats[key]}</p>
-                        <p className="text-xs text-gray-500">{label}</p>
+                    <div key={key} className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats[key]}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
                     </div>
                 ))}
             </div>
 
-            <h2 className="mb-2 text-sm font-semibold text-gray-700">Recently joined</h2>
-            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+            <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Recently joined</h2>
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                 {recentUsers.length === 0 ? (
-                    <p className="p-4 text-center text-sm text-gray-500">No users yet.</p>
+                    <p className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No users yet.</p>
                 ) : (
                     recentUsers.map((user) => (
-                        <div key={user.id} className="flex items-center justify-between border-b border-gray-200 p-4 last:border-b-0">
+                        <div
+                            key={user.id}
+                            className="flex items-center justify-between border-b border-gray-200 p-4 last:border-b-0 dark:border-gray-800"
+                        >
                             <div>
-                                <p className="text-sm font-medium text-gray-900">{user.display_name}</p>
-                                <Link href={`/u/${user.username}`} className="text-xs text-gray-500 hover:underline">
+                                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{user.display_name}</p>
+                                <Link
+                                    href={`/u/${user.username}`}
+                                    className="text-xs text-gray-500 hover:underline dark:text-gray-400"
+                                >
                                     @{user.username}
                                 </Link>
                             </div>
-                            <span className="text-xs text-gray-400">{new Date(user.created_at).toLocaleDateString()}</span>
+                            <span className="text-xs text-gray-400 dark:text-gray-500">
+                                {new Date(user.created_at).toLocaleDateString()}
+                            </span>
                         </div>
                     ))
                 )}

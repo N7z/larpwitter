@@ -26,12 +26,14 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
         <AppLayout>
             <Seo title={scope === 'following' ? 'Following' : 'Home'} />
 
-            <div className="mb-4 flex gap-4 border-b border-gray-200 text-sm font-medium">
+            <div className="mb-4 flex gap-4 border-b border-gray-200 text-sm font-medium dark:border-gray-800">
                 <Link
                     href="/?scope=global"
                     preserveState
                     className={`-mb-px border-b-2 px-1 pb-2 ${
-                        scope === 'global' ? 'border-sky-500 text-sky-600' : 'border-transparent text-gray-500'
+                        scope === 'global'
+                            ? 'border-sky-500 text-sky-600 dark:text-sky-400'
+                            : 'border-transparent text-gray-500 dark:text-gray-400'
                     }`}
                 >
                     Global
@@ -41,7 +43,9 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
                         href="/?scope=following"
                         preserveState
                         className={`-mb-px border-b-2 px-1 pb-2 ${
-                            scope === 'following' ? 'border-sky-500 text-sky-600' : 'border-transparent text-gray-500'
+                            scope === 'following'
+                                ? 'border-sky-500 text-sky-600 dark:text-sky-400'
+                                : 'border-transparent text-gray-500 dark:text-gray-400'
                         }`}
                     >
                         Following
@@ -52,17 +56,17 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
             {auth.user ? (
                 <PostComposer action="/posts" />
             ) : (
-                <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 text-center text-sm text-gray-600">
-                    <Link href="/login" className="font-semibold text-sky-600 hover:underline">
+                <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 text-center text-sm text-gray-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400">
+                    <Link href="/login" className="font-semibold text-sky-600 hover:underline dark:text-sky-400">
                         Log in
                     </Link>{' '}
                     to post.
                 </div>
             )}
 
-            <div className="overflow-hidden rounded-lg border border-gray-200">
+            <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800">
                 {items.length === 0 ? (
-                    <p className="p-6 text-center text-sm text-gray-500">No posts yet.</p>
+                    <p className="p-6 text-center text-sm text-gray-500 dark:text-gray-400">No posts yet.</p>
                 ) : (
                     <AnimatePresence initial={false}>
                         {items.map((post) => (

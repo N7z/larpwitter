@@ -48,11 +48,11 @@ export default function NotificationsIndex({ notifications }: NotificationsIndex
         <AppLayout>
             <Seo title="Notifications" />
 
-            <h1 className="mb-4 text-xl font-bold text-gray-900">Notifications</h1>
+            <h1 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">Notifications</h1>
 
-            <div className="overflow-hidden rounded-lg border border-gray-200">
+            <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800">
                 {notifications.length === 0 ? (
-                    <p className="p-6 text-center text-sm text-gray-500">No notifications yet.</p>
+                    <p className="p-6 text-center text-sm text-gray-500 dark:text-gray-400">No notifications yet.</p>
                 ) : (
                     notifications.map((notification) => {
                         const Icon = ICONS[notification.type];
@@ -65,13 +65,13 @@ export default function NotificationsIndex({ notifications }: NotificationsIndex
                               ? `/posts/${notification.post_id}`
                               : null;
 
-                        const rowClassName = `flex items-center gap-3 border-b border-gray-200 p-4 ${
-                            notification.is_new ? 'bg-sky-50' : 'bg-white'
-                        } ${href ? 'hover:bg-gray-100' : ''}`;
+                        const rowClassName = `flex items-center gap-3 border-b border-gray-200 p-4 dark:border-gray-800 ${
+                            notification.is_new ? 'bg-sky-50 dark:bg-sky-950/40' : 'bg-white dark:bg-gray-900'
+                        } ${href ? 'hover:bg-gray-100 dark:hover:bg-gray-800' : ''}`;
 
                         const content = (
                             <>
-                                <Icon className="h-5 w-5 shrink-0 text-gray-400" />
+                                <Icon className="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500" />
                                 {notification.actor && (
                                     <Avatar
                                         username={notification.actor.username}
@@ -81,11 +81,15 @@ export default function NotificationsIndex({ notifications }: NotificationsIndex
                                     />
                                 )}
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm text-gray-900">{message(notification)}</p>
+                                    <p className="text-sm text-gray-900 dark:text-gray-100">{message(notification)}</p>
                                     {notification.type === 'post_removed' && notification.excerpt && (
-                                        <p className="mt-0.5 truncate text-xs text-gray-500 italic">"{notification.excerpt}"</p>
+                                        <p className="mt-0.5 truncate text-xs text-gray-500 italic dark:text-gray-400">
+                                            "{notification.excerpt}"
+                                        </p>
                                     )}
-                                    <span className="text-xs text-gray-400">{new Date(notification.created_at).toLocaleString()}</span>
+                                    <span className="text-xs text-gray-400 dark:text-gray-500">
+                                        {new Date(notification.created_at).toLocaleString()}
+                                    </span>
                                 </div>
                             </>
                         );

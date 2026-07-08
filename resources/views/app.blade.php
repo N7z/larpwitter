@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0ea5e9">
 
+    <script>
+        (function () {
+            var appearance = localStorage.getItem('appearance');
+            if (appearance === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+
     @php
         $appName = config('app.name', 'Larpwitter');
         $seoTitle = $seo['title'] ?? null;
@@ -37,7 +46,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.tsx'])
     @inertiaHead
 </head>
-<body class="min-h-screen antialiased">
+<body class="min-h-screen bg-white antialiased dark:bg-gray-950">
     @inertia
 </body>
 </html>

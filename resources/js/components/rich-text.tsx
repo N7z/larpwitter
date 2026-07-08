@@ -19,7 +19,12 @@ export default function RichText({ text, className }: RichTextProps) {
                     const href = symbol === '@' ? `/u/${part.slice(1).toLowerCase()}` : `/tag/${part.slice(1).toLowerCase()}`;
 
                     return (
-                        <Link key={index} href={href} className="text-sky-600 hover:underline" onClick={(e) => e.stopPropagation()}>
+                        <Link
+                            key={index}
+                            href={href}
+                            className="text-sky-600 hover:underline dark:text-sky-400"
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             {part}
                         </Link>
                     );

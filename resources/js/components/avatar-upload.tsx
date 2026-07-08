@@ -24,10 +24,10 @@ export default function AvatarUpload({ onPreview }: AvatarUploadProps) {
     }
 
     return (
-        <label className="cursor-pointer text-sm font-medium text-sky-600 hover:underline">
+        <label className="cursor-pointer text-sm font-medium text-sky-600 hover:underline dark:text-sky-400">
             {form.processing ? 'Uploading...' : 'Change photo'}
             <input type="file" accept="image/png,image/jpeg,image/webp" onChange={onFileChange} className="hidden" />
-            {form.errors.avatar && <p className="mt-1 text-sm text-red-600">{form.errors.avatar}</p>}
+            {form.errors.avatar && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{form.errors.avatar}</p>}
         </label>
     );
 }

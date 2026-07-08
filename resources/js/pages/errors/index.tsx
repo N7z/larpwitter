@@ -25,10 +25,10 @@ export default function ErrorPage({ status }: ErrorPageProps) {
         <AppLayout>
             <Seo title={title} />
 
-            <div className="flex flex-col items-center rounded-lg border border-gray-200 bg-white px-6 py-16 text-center">
+            <div className="flex flex-col items-center rounded-lg border border-gray-200 bg-white px-6 py-16 text-center dark:border-gray-800 dark:bg-gray-900">
                 <p className="text-6xl font-black text-sky-500">{status}</p>
-                <h1 className="mt-4 text-xl font-bold text-gray-900">{title}</h1>
-                <p className="mt-2 max-w-sm text-sm text-gray-500">{description}</p>
+                <h1 className="mt-4 text-xl font-bold text-gray-900 dark:text-gray-100">{title}</h1>
+                <p className="mt-2 max-w-sm text-sm text-gray-500 dark:text-gray-400">{description}</p>
                 <Link
                     href="/"
                     className="mt-6 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-white hover:bg-sky-600"

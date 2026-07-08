@@ -24,7 +24,7 @@ export default function PostShow({ post, replies }: PostShowProps) {
         <AppLayout>
             <Seo title={`${post.user.display_name} (@${post.user.username})`} />
 
-            <div className="overflow-hidden rounded-lg border border-gray-200">
+            <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800">
                 <PostCard post={post} linkToShow={false} />
             </div>
 
@@ -32,8 +32,8 @@ export default function PostShow({ post, replies }: PostShowProps) {
                 {auth.user ? (
                     <PostComposer action={`/posts/${post.id}/replies`} placeholder="Post your reply" />
                 ) : (
-                    <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-sm text-gray-600">
-                        <Link href="/login" className="font-semibold text-sky-600 hover:underline">
+                    <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-sm text-gray-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400">
+                        <Link href="/login" className="font-semibold text-sky-600 hover:underline dark:text-sky-400">
                             Log in
                         </Link>{' '}
                         to reply.
@@ -41,9 +41,9 @@ export default function PostShow({ post, replies }: PostShowProps) {
                 )}
             </div>
 
-            <div className="overflow-hidden rounded-lg border border-gray-200">
+            <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800">
                 {items.length === 0 ? (
-                    <p className="p-6 text-center text-sm text-gray-500">No replies yet.</p>
+                    <p className="p-6 text-center text-sm text-gray-500 dark:text-gray-400">No replies yet.</p>
                 ) : (
                     <AnimatePresence initial={false}>
                         {items.map((reply) => (

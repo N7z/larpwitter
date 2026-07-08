@@ -64,7 +64,7 @@ export default function Turnstile({ siteKey, onVerify, error }: TurnstileProps) 
     return (
         <div className="mb-4 w-full">
             <div ref={container} className="w-full" />
-            {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+            {error && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>}
         </div>
     );
 }

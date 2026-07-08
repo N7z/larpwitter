@@ -65,12 +65,16 @@ export default function RepostDialog({ post, trigger }: RepostDialogProps) {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-5 shadow-lg"
+                                className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-5 shadow-lg dark:bg-gray-900"
                             >
                                 <div className="flex items-center justify-between">
-                                    <Dialog.Title className="text-base font-semibold text-gray-900">Repost</Dialog.Title>
+                                    <Dialog.Title className="text-base font-semibold text-gray-900 dark:text-gray-100">Repost</Dialog.Title>
                                     <Dialog.Close asChild>
-                                        <button type="button" aria-label="Close" className="text-gray-400 hover:text-gray-600">
+                                        <button
+                                            type="button"
+                                            aria-label="Close"
+                                            className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                                        >
                                             <X className="h-4 w-4" />
                                         </button>
                                     </Dialog.Close>
@@ -83,20 +87,24 @@ export default function RepostDialog({ post, trigger }: RepostDialogProps) {
                                     placeholder="Add a comment (optional)"
                                     rows={2}
                                     maxLength={280}
-                                    className="mt-3 w-full resize-none rounded-lg border border-gray-200 p-2 text-sm text-gray-900 focus:border-sky-400 focus:outline-none"
+                                    className="mt-3 w-full resize-none rounded-lg border border-gray-200 p-2 text-sm text-gray-900 focus:border-sky-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                                 />
-                                <div className={`text-right text-xs ${remaining < 20 ? 'text-red-500' : 'text-gray-400'}`}>{remaining}</div>
+                                <div
+                                    className={`text-right text-xs ${remaining < 20 ? 'text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-gray-500'}`}
+                                >
+                                    {remaining}
+                                </div>
 
                                 <PostEmbed post={embed} />
 
-                                {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+                                {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
                                 <div className="mt-4 flex justify-end gap-2">
                                     <button
                                         type="button"
                                         disabled={processing}
                                         onClick={() => submit('')}
-                                        className="rounded-full px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                                        className="rounded-full px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-gray-800"
                                     >
                                         Repost
                                     </button>

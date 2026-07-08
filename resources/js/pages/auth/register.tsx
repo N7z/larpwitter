@@ -66,9 +66,9 @@ export default function Register({ turnstileSiteKey }: RegisterProps) {
                     Register
                 </Button>
             </form>
-            <p className="mt-4 text-center text-sm text-gray-600">
+            <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
                 Already have an account?{' '}
-                <Link href="/login" className="font-medium text-sky-600 hover:underline">
+                <Link href="/login" className="font-medium text-sky-600 hover:underline dark:text-sky-400">
                     Log in
                 </Link>
             </p>

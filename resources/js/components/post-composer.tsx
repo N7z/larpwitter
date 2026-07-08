@@ -59,7 +59,7 @@ export default function PostComposer({ action, placeholder = "What's happening?"
     const remaining = 280 - form.data.body.length;
 
     return (
-        <form onSubmit={submit} className="mb-4 rounded-lg border border-gray-200 bg-white p-4">
+        <form onSubmit={submit} className="mb-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
             <textarea
                 value={form.data.body}
                 onChange={(e) => form.setData('body', e.target.value)}
@@ -67,7 +67,7 @@ export default function PostComposer({ action, placeholder = "What's happening?"
                 placeholder={placeholder}
                 rows={3}
                 maxLength={280}
-                className="w-full resize-none border-none text-sm text-gray-900 focus:outline-none"
+                className="w-full resize-none border-none text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-500"
             />
             {form.errors.body && <p className="mt-1 text-sm text-red-600">{form.errors.body}</p>}
 
@@ -80,11 +80,11 @@ export default function PostComposer({ action, placeholder = "What's happening?"
                         transition={{ duration: 0.15 }}
                         className="relative mt-2 inline-block"
                     >
-                        <img src={imagePreview} alt="" className="max-h-60 rounded-lg border border-gray-200" />
+                        <img src={imagePreview} alt="" className="max-h-60 rounded-lg border border-gray-200 dark:border-gray-800" />
                         <button
                             type="button"
                             onClick={() => setImage(null)}
-                            className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-900 text-xs text-white hover:bg-gray-700"
+                            className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-900 text-xs text-white hover:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-300"
                             aria-label="Remove image"
                         >
                             ×
@@ -99,7 +99,7 @@ export default function PostComposer({ action, placeholder = "What's happening?"
                     <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="text-gray-400 hover:text-sky-500"
+                        className="text-gray-400 hover:text-sky-500 dark:text-gray-500 dark:hover:text-sky-400"
                         aria-label="Attach image"
                     >
                         <svg
@@ -122,7 +122,9 @@ export default function PostComposer({ action, placeholder = "What's happening?"
                         onChange={onFileChange}
                         className="hidden"
                     />
-                    <span className={`text-xs ${remaining < 20 ? 'text-red-500' : 'text-gray-400'}`}>{remaining}</span>
+                    <span className={`text-xs ${remaining < 20 ? 'text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                        {remaining}
+                    </span>
                 </div>
                 <Button type="submit" disabled={form.data.body.trim().length === 0 || form.processing}>
                     Post

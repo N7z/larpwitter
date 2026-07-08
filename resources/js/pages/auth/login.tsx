@@ -52,9 +52,9 @@ export default function Login({ turnstileSiteKey }: LoginProps) {
                     Log in
                 </Button>
             </form>
-            <p className="mt-4 text-center text-sm text-gray-600">
+            <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
                 No account?{' '}
-                <Link href="/register" className="font-medium text-sky-600 hover:underline">
+                <Link href="/register" className="font-medium text-sky-600 hover:underline dark:text-sky-400">
                     Register
                 </Link>
             </p>
