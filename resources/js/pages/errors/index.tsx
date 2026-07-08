@@ -23,7 +23,7 @@ export default function ErrorPage({ status }: ErrorPageProps) {
 
     return (
         <AppLayout>
-            <Seo title={title} description={description} noindex />
+            <Seo title={title} />
 
             <div className="flex flex-col items-center rounded-lg border border-gray-200 bg-white px-6 py-16 text-center">
                 <p className="text-6xl font-black text-sky-500">{status}</p>

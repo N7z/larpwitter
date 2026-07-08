@@ -35,7 +35,7 @@ export default function AdminUsersIndex({ users, search }: AdminUsersIndexProps)
 
     return (
         <AdminLayout>
-            <Seo title="Admin · Users" noindex />
+            <Seo title="Admin · Users" />
 
             <h1 className="mb-4 text-xl font-bold text-gray-900">Users</h1>
 

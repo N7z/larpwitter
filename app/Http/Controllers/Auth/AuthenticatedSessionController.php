@@ -14,7 +14,10 @@ class AuthenticatedSessionController extends Controller
 {
     public function create(): Response
     {
-        return Inertia::render('auth/login');
+        return Inertia::render('auth/login')->withViewData(['seo' => [
+            'title' => 'Log in',
+            'description' => 'Log in to Larpwitter to post, follow and reply.',
+        ]]);
     }
 
     public function store(LoginRequest $request): RedirectResponse

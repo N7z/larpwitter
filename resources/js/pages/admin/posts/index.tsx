@@ -33,7 +33,7 @@ export default function AdminPostsIndex({ posts, search }: AdminPostsIndexProps)
 
     return (
         <AdminLayout>
-            <Seo title="Admin · Posts" noindex />
+            <Seo title="Admin · Posts" />
 
             <h1 className="mb-4 text-xl font-bold text-gray-900">Posts</h1>
 

@@ -30,7 +30,7 @@ class UserController extends Controller
         return Inertia::render('admin/users/index', [
             'users' => $users,
             'search' => $search,
-        ]);
+        ])->withViewData(['seo' => ['title' => 'Admin · Users', 'noindex' => true]]);
     }
 
     public function toggleAdmin(Request $request, User $user): RedirectResponse

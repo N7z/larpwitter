@@ -46,7 +46,7 @@ function message(notification: NotificationItem): string {
 export default function NotificationsIndex({ notifications }: NotificationsIndexProps) {
     return (
         <AppLayout>
-            <Seo title="Notifications" noindex />
+            <Seo title="Notifications" />
 
             <h1 className="mb-4 text-xl font-bold text-gray-900">Notifications</h1>
 

@@ -20,7 +20,7 @@ export default function Login() {
 
     return (
         <GuestLayout>
-            <Seo title="Log in" description="Log in to Larpwitter to post, follow and reply." />
+            <Seo title="Log in" />
 
             <form onSubmit={submit}>
                 <TextField

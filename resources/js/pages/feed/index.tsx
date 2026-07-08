@@ -24,10 +24,7 @@ export default function FeedIndex({ posts, scope }: FeedIndexProps) {
 
     return (
         <AppLayout>
-            <Seo
-                title={scope === 'following' ? 'Following' : 'Home'}
-                description="See what larpers are posting right now, in character or out."
-            />
+            <Seo title={scope === 'following' ? 'Following' : 'Home'} />
 
             <div className="mb-4 flex gap-4 border-b border-gray-200 text-sm font-medium">
                 <Link

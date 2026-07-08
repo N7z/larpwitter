@@ -29,7 +29,7 @@ class PostController extends Controller
         return Inertia::render('admin/posts/index', [
             'posts' => $posts,
             'search' => $search,
-        ]);
+        ])->withViewData(['seo' => ['title' => 'Admin · Posts', 'noindex' => true]]);
     }
 
     public function destroy(Request $request, Post $post): RedirectResponse

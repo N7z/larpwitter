@@ -21,7 +21,7 @@ export default function HashtagShow({ hashtag, posts }: HashtagShowProps) {
 
     return (
         <AppLayout>
-            <Seo title={`#${hashtag}`} description={`Browse posts tagged #${hashtag} on Larpwitter.`} />
+            <Seo title={`#${hashtag}`} />
 
             <h1 className="mb-4 text-xl font-bold text-gray-900">#{hashtag}</h1>
 

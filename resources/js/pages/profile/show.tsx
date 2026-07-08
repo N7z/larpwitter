@@ -8,7 +8,6 @@ import PostCard from '@/components/post-card';
 import Seo from '@/components/seo';
 import UserBadge from '@/components/user-badge';
 import AppLayout from '@/layouts/app-layout';
-import { excerpt } from '@/lib/text';
 import { PostItem, ProfileUser } from '@/types';
 
 interface ProfileShowProps {
@@ -47,11 +46,7 @@ export default function ProfileShow({
 
     return (
         <AppLayout>
-            <Seo
-                title={`${profileUser.display_name} (@${profileUser.username})`}
-                description={bio ? excerpt(bio) : `@${profileUser.username}'s profile on Larpwitter.`}
-                image={avatarUrl ?? undefined}
-            />
+            <Seo title={`${profileUser.display_name} (@${profileUser.username})`} />
 
             <div className="mb-4 rounded-lg border border-gray-200 bg-white p-6">
                 <div className="flex items-start justify-between">

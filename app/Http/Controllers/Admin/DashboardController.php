@@ -24,6 +24,6 @@ class DashboardController extends Controller
                 'follows' => DB::table('follows')->count(),
             ],
             'recentUsers' => User::latest()->take(5)->get(['id', 'username', 'display_name', 'created_at']),
-        ]);
+        ])->withViewData(['seo' => ['title' => 'Admin · Dashboard', 'noindex' => true]]);
     }
 }

@@ -36,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
             if (in_array($response->getStatusCode(), [403, 404, 429, 500, 503])) {
                 return Inertia::render('errors/index', ['status' => $response->getStatusCode()])
+                    ->withViewData(['seo' => ['title' => 'Error '.$response->getStatusCode(), 'noindex' => true]])
                     ->toResponse($request)
                     ->setStatusCode($response->getStatusCode());
             }

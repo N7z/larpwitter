@@ -8,6 +8,7 @@ use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -46,7 +47,10 @@ class PostController extends Controller
         return Inertia::render('feed/index', [
             'posts' => $posts,
             'scope' => $scope,
-        ]);
+        ])->withViewData(['seo' => [
+            'title' => $scope === 'following' ? 'Following' : 'Home',
+            'description' => 'See what larpers are posting right now, in character or out.',
+        ]]);
     }
 
     public function store(StorePostRequest $request): RedirectResponse
@@ -87,7 +91,12 @@ class PostController extends Controller
         return Inertia::render('posts/show', [
             'post' => $post,
             'replies' => $replies,
-        ]);
+        ])->withViewData(['seo' => [
+            'title' => "{$post->user->display_name} (@{$post->user->username})",
+            'description' => Str::limit($post->body, 160),
+            'image' => $post->image_url,
+            'card' => $post->image_url ? 'summary_large_image' : 'summary',
+        ]]);
     }
 
     public function destroy(Post $post): RedirectResponse

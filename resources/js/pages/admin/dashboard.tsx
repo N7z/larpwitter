@@ -21,7 +21,7 @@ const STAT_LABELS: { key: keyof AdminStats; label: string }[] = [
 export default function AdminDashboard({ stats, recentUsers }: AdminDashboardProps) {
     return (
         <AdminLayout>
-            <Seo title="Admin · Dashboard" noindex />
+            <Seo title="Admin · Dashboard" />
 
             <h1 className="mb-4 text-xl font-bold text-gray-900">Dashboard</h1>
 

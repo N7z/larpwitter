@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -44,6 +45,10 @@ class ProfileController extends Controller
             'isOwnProfile' => $authUser?->id === $user->id,
             'tab' => $tab,
             'posts' => $posts,
-        ]);
+        ])->withViewData(['seo' => [
+            'title' => "{$user->display_name} (@{$user->username})",
+            'description' => $user->bio ? Str::limit($user->bio, 160) : "@{$user->username}'s profile on Larpwitter.",
+            'image' => $user->avatar_url,
+        ]]);
     }
 }

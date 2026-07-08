@@ -22,7 +22,7 @@ export default function Register() {
 
     return (
         <GuestLayout>
-            <Seo title="Sign up" description="Create a Larpwitter account and join the larping community." />
+            <Seo title="Sign up" />
 
             <form onSubmit={submit}>
                 <TextField

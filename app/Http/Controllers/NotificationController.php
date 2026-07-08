@@ -52,6 +52,6 @@ class NotificationController extends Controller
 
         return Inertia::render('notifications/index', [
             'notifications' => $items->values(),
-        ]);
+        ])->withViewData(['seo' => ['title' => 'Notifications', 'noindex' => true]]);
     }
 }

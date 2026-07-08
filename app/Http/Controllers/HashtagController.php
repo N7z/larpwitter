@@ -35,6 +35,9 @@ class HashtagController extends Controller
         return Inertia::render('hashtags/show', [
             'hashtag' => $hashtag->name,
             'posts' => $posts,
-        ]);
+        ])->withViewData(['seo' => [
+            'title' => "#{$hashtag->name}",
+            'description' => "Browse posts tagged #{$hashtag->name} on Larpwitter.",
+        ]]);
     }
 }
