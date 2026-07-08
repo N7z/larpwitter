@@ -32,6 +32,7 @@ class Post extends Model
     protected static function booted(): void
     {
         static::created(fn (Post $post) => $post->syncHashtags());
+        static::updated(fn (Post $post) => $post->syncHashtags());
     }
 
     public function syncHashtags(): void

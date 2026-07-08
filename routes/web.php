@@ -40,6 +40,7 @@ Route::get('tag/{hashtag:name}', [HashtagController::class, 'show'])->name('hash
 
 Route::middleware('auth')->group(function () {
     Route::post('posts', [PostController::class, 'store'])->name('posts.store');
+    Route::patch('posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
     Route::post('posts/{post}/replies', [ReplyController::class, 'store'])->name('replies.store');

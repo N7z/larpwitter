@@ -1,9 +1,10 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { Heart, Repeat2, Trash2 } from 'lucide-react';
+import { Heart, Pencil, Repeat2, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import Avatar from '@/components/avatar';
 import ConfirmDialog from '@/components/confirm-dialog';
+import EditPostDialog from '@/components/edit-post-dialog';
 import PostEmbed from '@/components/post-embed';
 import RepostDialog from '@/components/repost-dialog';
 import RichText from '@/components/rich-text';
@@ -149,23 +150,41 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                         </Link>
                     )}
                     {isOwnPost && (
-                        <ConfirmDialog
-                            title="Delete this post?"
-                            description="This cannot be undone."
-                            confirmLabel="Delete"
-                            onConfirm={deletePost}
-                            trigger={
-                                <motion.button
-                                    type="button"
-                                    disabled={deleting}
-                                    whileTap={{ scale: 0.85 }}
-                                    aria-label="Delete post"
-                                    className="ml-auto hover:text-red-600 disabled:opacity-50"
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </motion.button>
-                            }
-                        />
+                        <div className="ml-auto flex items-center gap-4">
+                            {!post.repost_of && (
+                                <EditPostDialog
+                                    postId={post.id}
+                                    body={post.body ?? ''}
+                                    trigger={
+                                        <motion.button
+                                            type="button"
+                                            whileTap={{ scale: 0.85 }}
+                                            aria-label="Edit post"
+                                            className="hover:text-sky-600"
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </motion.button>
+                                    }
+                                />
+                            )}
+                            <ConfirmDialog
+                                title="Delete this post?"
+                                description="This cannot be undone."
+                                confirmLabel="Delete"
+                                onConfirm={deletePost}
+                                trigger={
+                                    <motion.button
+                                        type="button"
+                                        disabled={deleting}
+                                        whileTap={{ scale: 0.85 }}
+                                        aria-label="Delete post"
+                                        className="hover:text-red-600 disabled:opacity-50"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </motion.button>
+                                }
+                            />
+                        </div>
                     )}
                 </div>
             </div>

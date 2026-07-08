@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\NotifiesMentions;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -97,6 +98,15 @@ class PostController extends Controller
             'image' => $post->image_url,
             'card' => $post->image_url ? 'summary_large_image' : 'summary',
         ]]);
+    }
+
+    public function update(UpdatePostRequest $request, Post $post): RedirectResponse
+    {
+        Gate::authorize('update', $post);
+
+        $post->update(['body' => $request->body]);
+
+        return redirect()->back();
     }
 
     public function destroy(Post $post): RedirectResponse
