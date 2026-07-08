@@ -50,7 +50,7 @@ class PostController extends Controller
             'scope' => $scope,
         ])->withViewData(['seo' => [
             'title' => $scope === 'following' ? 'Following' : 'Home',
-            'description' => 'See what larpers are posting right now, in character or out.',
+            'description' => 'See what larpers are posting right now.',
         ]]);
     }
 
