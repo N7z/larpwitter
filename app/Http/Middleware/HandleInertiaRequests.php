@@ -5,6 +5,10 @@ namespace App\Http\Middleware;
 use App\Models\Hashtag;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -67,14 +71,52 @@ class HandleInertiaRequests extends Middleware
                     'is_following' => in_array($user->id, $followingIds),
                 ]);
             },
-            'trendingHashtags' => fn () => Hashtag::query()
-                ->withCount(['posts as posts_count' => fn ($q) => $q->where('posts.created_at', '>=', now()->subDays(7))])
-                ->orderByDesc('posts_count')
-                ->take(10)
-                ->get(['id', 'name'])
-                ->filter(fn (Hashtag $hashtag) => $hashtag->posts_count > 0)
-                ->take(5)
-                ->values(),
+            'trendingHashtags' => fn () => $this->trendingHashtags(),
         ];
+    }
+
+    /**
+     * Trending ranks hashtags by a recency-weighted score, not a flat count, so
+     * yesterday's burst decays and fresh chatter rises. Cached since it runs on
+     * every request.
+     */
+    private function trendingHashtags(): Collection
+    {
+        return Cache::remember('trending-hashtags', now()->addMinutes(10), function () {
+            $halfLifeHours = 12;
+
+            $rows = DB::table('hashtag_post')
+                ->join('posts', 'posts.id', '=', 'hashtag_post.post_id')
+                ->where('posts.created_at', '>=', now()->subDays(3))
+                ->get(['hashtag_post.hashtag_id', 'posts.created_at']);
+
+            $scores = [];
+            $counts = [];
+
+            foreach ($rows as $row) {
+                $id = (int) $row->hashtag_id;
+                $ageHours = abs(Carbon::parse($row->created_at)->diffInHours(now()));
+                $scores[$id] = ($scores[$id] ?? 0) + pow(0.5, $ageHours / $halfLifeHours);
+                $counts[$id] = ($counts[$id] ?? 0) + 1;
+            }
+
+            arsort($scores);
+            $topIds = array_slice(array_keys($scores), 0, 5);
+
+            if ($topIds === []) {
+                return collect();
+            }
+
+            $names = Hashtag::whereIn('id', $topIds)->pluck('name', 'id');
+
+            return collect($topIds)
+                ->filter(fn (int $id) => isset($names[$id]))
+                ->map(fn (int $id) => [
+                    'id' => $id,
+                    'name' => $names[$id],
+                    'posts_count' => $counts[$id],
+                ])
+                ->values();
+        });
     }
 }

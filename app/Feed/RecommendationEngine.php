@@ -81,7 +81,8 @@ class RecommendationEngine
     }
 
     /**
-     * Recent, top-level posts the user hasn't authored or already liked.
+     * Recent, top-level posts the user hasn't already liked. The user's own
+     * posts stay in the pool so a fresh post shows up in their For You.
      *
      * @return Collection<int, Post>
      */
@@ -89,7 +90,6 @@ class RecommendationEngine
     {
         return Post::query()
             ->whereNull('parent_id')
-            ->where('user_id', '!=', $user->id)
             ->where('created_at', '>=', now()->subDays(self::CANDIDATE_WINDOW_DAYS))
             ->whereNotExists(function ($q) use ($user) {
                 $q->select(DB::raw(1))
@@ -106,7 +106,7 @@ class RecommendationEngine
 
     /**
      * @param  Collection<int, Post>  $candidates
-     * @return array{followed: array<int, bool>, likedAuthors: array<int, bool>, hashtagWeights: array<int, float>, postHashtags: array<int, list<int>>, social: array<int, int>, verified: array<int, bool>}
+     * @return array{self: int, followed: array<int, bool>, likedAuthors: array<int, bool>, hashtagWeights: array<int, float>, postHashtags: array<int, list<int>>, social: array<int, int>, verified: array<int, bool>}
      */
     private function interestProfile(User $user, Collection $candidates): array
     {
@@ -158,6 +158,7 @@ class RecommendationEngine
             ->all();
 
         return [
+            'self' => $user->id,
             'followed' => $followedIds->mapWithKeys(fn ($id) => [(int) $id => true])->all(),
             'likedAuthors' => $likedAuthorIds->mapWithKeys(fn ($id) => [(int) $id => true])->all(),
             'hashtagWeights' => $hashtagWeights,
@@ -168,7 +169,7 @@ class RecommendationEngine
     }
 
     /**
-     * @param  array{followed: array<int, bool>, likedAuthors: array<int, bool>, hashtagWeights: array<int, float>, postHashtags: array<int, list<int>>, social: array<int, int>, verified: array<int, bool>}  $profile
+     * @param  array{self: int, followed: array<int, bool>, likedAuthors: array<int, bool>, hashtagWeights: array<int, float>, postHashtags: array<int, list<int>>, social: array<int, int>, verified: array<int, bool>}  $profile
      */
     private function score(Post $post, array $profile): float
     {
@@ -178,6 +179,7 @@ class RecommendationEngine
         $recency = pow(0.5, $ageHours / self::RECENCY_HALF_LIFE_HOURS);
 
         $author = match (true) {
+            $post->user_id === $profile['self'] => 1.0,
             isset($profile['followed'][$post->user_id]) => 1.0,
             isset($profile['likedAuthors'][$post->user_id]) => 0.5,
             default => 0.0,

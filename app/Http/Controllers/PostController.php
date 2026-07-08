@@ -116,7 +116,7 @@ class PostController extends Controller
         return $post;
     }
 
-    public function store(StorePostRequest $request): RedirectResponse
+    public function store(StorePostRequest $request, RecommendationEngine $engine): RedirectResponse
     {
         $post = $request->user()->posts()->create([
             'body' => $request->body,
@@ -124,6 +124,8 @@ class PostController extends Controller
         ]);
 
         $this->notifyMentions($post);
+
+        $engine->forget($request->user());
 
         return redirect()->back();
     }
