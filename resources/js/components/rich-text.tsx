@@ -5,7 +5,7 @@ interface RichTextProps {
     className?: string;
 }
 
-const ENTITY = /(@[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*|#[a-zA-Z0-9_]+)/g;
+const ENTITY = /(@[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*|#[\p{L}\p{N}_]+)/gu;
 
 export default function RichText({ text, className }: RichTextProps) {
     const parts = text.split(ENTITY);

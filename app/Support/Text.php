@@ -21,7 +21,7 @@ class Text
      */
     public static function hashtags(?string $body): array
     {
-        return self::extract('/#([a-z0-9_]+)/i', $body);
+        return self::extract('/#([\p{L}\p{N}_]+)/u', $body);
     }
 
     /**
@@ -35,6 +35,6 @@ class Text
 
         preg_match_all($pattern, $body, $matches);
 
-        return array_values(array_unique(array_map('strtolower', $matches[1])));
+        return array_values(array_unique(array_map(fn (string $match) => mb_strtolower($match, 'UTF-8'), $matches[1])));
     }
 }
