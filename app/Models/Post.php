@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Text;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,6 +28,19 @@ class Post extends Model
     protected $appends = [
         'image_url',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(fn (Post $post) => $post->syncHashtags());
+    }
+
+    public function syncHashtags(): void
+    {
+        $ids = collect(Text::hashtags($this->body))
+            ->map(fn (string $name) => Hashtag::firstOrCreate(['name' => $name])->id);
+
+        $this->hashtags()->sync($ids);
+    }
 
     protected function imageUrl(): Attribute
     {
@@ -63,6 +77,11 @@ class Post extends Model
     public function reposts(): HasMany
     {
         return $this->hasMany(Post::class, 'repost_of_id');
+    }
+
+    public function hashtags(): BelongsToMany
+    {
+        return $this->belongsToMany(Hashtag::class);
     }
 
     public function isReply(): bool

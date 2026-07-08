@@ -6,6 +6,8 @@ import Avatar from '@/components/avatar';
 import ConfirmDialog from '@/components/confirm-dialog';
 import PostEmbed from '@/components/post-embed';
 import RepostDialog from '@/components/repost-dialog';
+import RichText from '@/components/rich-text';
+import UserBadge from '@/components/user-badge';
 import { PostItem, Shared } from '@/types';
 
 interface PostCardProps {
@@ -85,12 +87,15 @@ export default function PostCard({ post, linkToShow = true }: PostCardProps) {
                 {post.parent && <PostEmbed post={post.parent} />}
                 <div className={`flex items-baseline gap-2 ${post.parent ? 'mt-2' : ''}`}>
                     <Link href={`/u/${post.user.username}`}>
-                        <span className="font-semibold text-gray-900 hover:text-blue-500">{post.user.display_name}</span>
+                        <span className="inline-flex items-center gap-1 font-semibold text-gray-900 hover:text-blue-500">
+                            {post.user.display_name}
+                            <UserBadge user={post.user} />
+                        </span>
                     </Link>
                     <span className="text-sm text-gray-500">@{post.user.username}</span>
                     <span className="text-sm text-gray-400">· {new Date(post.created_at).toLocaleString()}</span>
                 </div>
-                {post.body && <p className="mt-1 whitespace-pre-wrap text-gray-900">{post.body}</p>}
+                {post.body && <RichText text={post.body} className="mt-1 whitespace-pre-wrap text-gray-900" />}
                 {post.image_url && (
                     <img
                         src={post.image_url}

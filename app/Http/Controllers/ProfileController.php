@@ -35,7 +35,7 @@ class ProfileController extends Controller
         });
 
         return Inertia::render('profile/show', [
-            'profileUser' => $user->only(['id', 'username', 'display_name', 'avatar_url', 'bio']),
+            'profileUser' => $user->only(['id', 'username', 'display_name', 'avatar_url', 'bio', 'is_verified', 'is_admin']),
             'postsCount' => $user->posts()->whereNull('parent_id')->count(),
             'repliesCount' => $user->posts()->whereNotNull('parent_id')->count(),
             'followersCount' => $user->followers()->count(),

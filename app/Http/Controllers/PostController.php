@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\NotifiesMentions;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +13,8 @@ use Inertia\Response;
 
 class PostController extends Controller
 {
+    use NotifiesMentions;
+
     public function index(Request $request): Response
     {
         $user = $request->user();
@@ -48,10 +51,12 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request): RedirectResponse
     {
-        $request->user()->posts()->create([
+        $post = $request->user()->posts()->create([
             'body' => $request->body,
             'image_path' => $request->file('image')?->store('posts', 'public'),
         ]);
+
+        $this->notifyMentions($post);
 
         return redirect()->back();
     }

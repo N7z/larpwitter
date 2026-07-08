@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $users = User::factory(10)->create();
 
+        $users->first()->forceFill(['is_admin' => true])->save();
+
         $posts = collect();
         $users->each(function (User $user) use (&$posts) {
             $posts = $posts->merge(Post::factory(3)->for($user)->create());

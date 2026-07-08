@@ -42,6 +42,7 @@ class NotificationController extends Controller
                 ] : null,
                 'post_id' => $postId && $posts->has($postId) ? $postId : null,
                 'is_quote' => $notification->data['is_quote'] ?? false,
+                'excerpt' => $notification->data['excerpt'] ?? null,
                 'is_new' => $notification->read_at === null,
                 'created_at' => $notification->created_at,
             ];

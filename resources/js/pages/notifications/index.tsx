@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Heart, Repeat2, UserPlus } from 'lucide-react';
+import { AtSign, BadgeCheck, Heart, MessageCircle, Repeat2, ShieldCheck, Trash2, UserPlus } from 'lucide-react';
 import Avatar from '@/components/avatar';
 import AppLayout from '@/layouts/app-layout';
 import { NotificationItem } from '@/types';
@@ -10,9 +10,13 @@ interface NotificationsIndexProps {
 
 const ICONS = {
     like: Heart,
-    reply: Heart,
+    reply: MessageCircle,
     repost: Repeat2,
     follow: UserPlus,
+    mention: AtSign,
+    verified: BadgeCheck,
+    admin: ShieldCheck,
+    post_removed: Trash2,
 };
 
 function message(notification: NotificationItem): string {
@@ -27,6 +31,14 @@ function message(notification: NotificationItem): string {
             return notification.is_quote ? `${name} quoted your post` : `${name} reposted your post`;
         case 'follow':
             return `${name} started following you`;
+        case 'mention':
+            return `${name} mentioned you`;
+        case 'verified':
+            return `${name} verified your account`;
+        case 'admin':
+            return `${name} made you an admin`;
+        case 'post_removed':
+            return `${name} removed one of your posts`;
     }
 }
 
@@ -41,14 +53,14 @@ export default function NotificationsIndex({ notifications }: NotificationsIndex
                 ) : (
                     notifications.map((notification) => {
                         const Icon = ICONS[notification.type];
-                        const href =
-                            notification.type === 'follow'
-                                ? notification.actor
-                                    ? `/u/${notification.actor.username}`
-                                    : null
-                                : notification.post_id
-                                  ? `/posts/${notification.post_id}`
-                                  : null;
+                        const linksToActor = notification.type === 'follow' || notification.type === 'verified' || notification.type === 'admin';
+                        const href = linksToActor
+                            ? notification.actor
+                                ? `/u/${notification.actor.username}`
+                                : null
+                            : notification.post_id
+                              ? `/posts/${notification.post_id}`
+                              : null;
 
                         const rowClassName = `flex items-center gap-3 border-b border-gray-200 p-4 ${
                             notification.is_new ? 'bg-sky-50' : 'bg-white'
@@ -67,6 +79,9 @@ export default function NotificationsIndex({ notifications }: NotificationsIndex
                                 )}
                                 <div className="min-w-0 flex-1">
                                     <p className="text-sm text-gray-900">{message(notification)}</p>
+                                    {notification.type === 'post_removed' && notification.excerpt && (
+                                        <p className="mt-0.5 truncate text-xs text-gray-500 italic">"{notification.excerpt}"</p>
+                                    )}
                                     <span className="text-xs text-gray-400">{new Date(notification.created_at).toLocaleString()}</span>
                                 </div>
                             </>

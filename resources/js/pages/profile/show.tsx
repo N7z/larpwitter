@@ -5,6 +5,7 @@ import Avatar from '@/components/avatar';
 import BioEditor from '@/components/bio-editor';
 import FollowButton from '@/components/follow-button';
 import PostCard from '@/components/post-card';
+import UserBadge from '@/components/user-badge';
 import AppLayout from '@/layouts/app-layout';
 import { PostItem, ProfileUser } from '@/types';
 
@@ -49,7 +50,10 @@ export default function ProfileShow({
                     <div className="flex items-center gap-4">
                         <Avatar username={profileUser.username} displayName={profileUser.display_name} avatarUrl={avatarUrl} size="lg" />
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">{profileUser.display_name}</h1>
+                            <h1 className="flex items-center gap-1 text-xl font-bold text-gray-900">
+                                {profileUser.display_name}
+                                <UserBadge user={profileUser} className="h-5 w-5" />
+                            </h1>
                             <p className="text-sm text-gray-500">@{profileUser.username}</p>
                             {isOwnProfile && (
                                 <div className="mt-1">

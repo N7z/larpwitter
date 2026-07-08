@@ -5,9 +5,10 @@ import Button from '@/components/button';
 interface FollowButtonProps {
     username: string;
     isFollowing: boolean;
+    className?: string;
 }
 
-export default function FollowButton({ username, isFollowing }: FollowButtonProps) {
+export default function FollowButton({ username, isFollowing, className = '' }: FollowButtonProps) {
     const [following, setFollowing] = useState(isFollowing);
 
     useEffect(() => {
@@ -31,7 +32,7 @@ export default function FollowButton({ username, isFollowing }: FollowButtonProp
         <Button
             type="button"
             onClick={toggle}
-            className={following ? '!bg-white !text-gray-900 border border-gray-300 hover:!bg-gray-100' : ''}
+            className={`${following ? '!bg-white !text-gray-900 border border-gray-300 hover:!bg-gray-100' : ''} ${className}`}
         >
             {following ? 'Following' : 'Follow'}
         </Button>

@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\BioController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\HashtagController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
@@ -28,6 +32,7 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::get('/', [PostController::class, 'index'])->name('feed');
 Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
 Route::get('u/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('tag/{hashtag:name}', [HashtagController::class, 'show'])->name('hashtags.show');
 
 Route::middleware('auth')->group(function () {
     Route::post('posts', [PostController::class, 'store'])->name('posts.store');
@@ -46,4 +51,16 @@ Route::middleware('auth')->group(function () {
     Route::post('profile/bio', [BioController::class, 'store'])->name('bio.store');
 
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::patch('users/{user}/toggle-admin', [AdminUserController::class, 'toggleAdmin'])->name('users.toggle-admin');
+    Route::patch('users/{user}/toggle-verified', [AdminUserController::class, 'toggleVerified'])->name('users.toggle-verified');
+    Route::delete('users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+
+    Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');
+    Route::delete('posts/{post}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
 });
