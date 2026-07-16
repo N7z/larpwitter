@@ -1,11 +1,18 @@
 import { router, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import { FormEvent, useState } from 'react';
+import AdminUserMenu from '@/components/admin-user-menu';
 import Avatar from '@/components/avatar';
-import ConfirmDialog from '@/components/confirm-dialog';
 import Seo from '@/components/seo';
 import UserBadge from '@/components/user-badge';
 import AdminLayout from '@/layouts/admin-layout';
 import { AdminUserRow, Paginated, Shared, VerificationType } from '@/types';
+
+const VERIFICATION_LABELS: Record<VerificationType, string> = {
+    0: 'Not verified',
+    1: 'Verified',
+    2: 'Company',
+};
 
 interface AdminUsersIndexProps {
     users: Paginated<AdminUserRow>;
@@ -15,6 +22,7 @@ interface AdminUsersIndexProps {
 export default function AdminUsersIndex({ users, search }: AdminUsersIndexProps) {
     const { auth } = usePage<Shared>().props;
     const [query, setQuery] = useState(search ?? '');
+    const [feedback, setFeedback] = useState<string | null>(null);
 
     function submitSearch(event: FormEvent) {
         event.preventDefault();
@@ -33,11 +41,27 @@ export default function AdminUsersIndex({ users, search }: AdminUsersIndexProps)
         router.delete(`/admin/users/${userId}`, { preserveScroll: true });
     }
 
+    async function resetPassword(userId: number) {
+        try {
+            const { data } = await axios.post<{ url: string }>(`/admin/users/${userId}/reset-password`);
+            await navigator.clipboard.writeText(data.url);
+            setFeedback('Reset link copied to clipboard.');
+        } catch {
+            setFeedback('Could not generate a reset link.');
+        }
+
+        setTimeout(() => setFeedback(null), 4000);
+    }
+
     return (
         <AdminLayout>
             <Seo title="Admin · Users" />
 
             <h1 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">Users</h1>
+
+            {feedback && (
+                <p className="mb-4 rounded-lg bg-sky-50 px-3 py-2 text-sm text-sky-700 dark:bg-sky-950 dark:text-sky-400">{feedback}</p>
+            )}
 
             <form onSubmit={submitSearch} className="mb-4 flex gap-2">
                 <input
@@ -83,39 +107,21 @@ export default function AdminUsersIndex({ users, search }: AdminUsersIndexProps)
                             </div>
 
                             <div className="flex shrink-0 items-center gap-2">
-                                <select
-                                    value={user.is_verified}
-                                    onChange={(event) => updateVerification(user.id, Number(event.target.value) as VerificationType)}
-                                    className="rounded-lg border border-gray-300 px-2 py-1.5 text-xs font-medium text-gray-600 focus:border-sky-500 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
-                                >
-                                    <option value={0}>Not verified</option>
-                                    <option value={1}>Verified</option>
-                                    <option value={2}>Company</option>
-                                </select>
-                                {user.id !== auth.user?.id && (
-                                    <>
-                                        <button
-                                            type="button"
-                                            onClick={() => toggleAdmin(user.id)}
-                                            className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                                        >
-                                            {user.is_admin ? 'Revoke admin' : 'Make admin'}
-                                        </button>
-                                        <ConfirmDialog
-                                            trigger={
-                                                <button
-                                                    type="button"
-                                                    className="rounded-lg px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
-                                                >
-                                                    Delete
-                                                </button>
-                                            }
-                                            title={`Delete @${user.username}?`}
-                                            description="This permanently deletes the user and all their posts, likes, and follows."
-                                            confirmLabel="Delete"
-                                            onConfirm={() => deleteUser(user.id)}
-                                        />
-                                    </>
+                                {user.id !== auth.user?.id ? (
+                                    <AdminUserMenu
+                                        isAdmin={user.is_admin}
+                                        verification={user.is_verified}
+                                        onToggleAdmin={() => toggleAdmin(user.id)}
+                                        onUpdateVerification={(type) => updateVerification(user.id, type)}
+                                        onResetPassword={() => resetPassword(user.id)}
+                                        onDelete={() => deleteUser(user.id)}
+                                        deleteTitle={`Delete @${user.username}?`}
+                                        deleteDescription="This permanently deletes the user and all their posts, likes, and follows."
+                                    />
+                                ) : (
+                                    <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+                                        {VERIFICATION_LABELS[user.is_verified]}
+                                    </span>
                                 )}
                             </div>
                         </div>

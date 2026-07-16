@@ -49,27 +49,45 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'status' => fn () => $request->session()->get('status'),
             ],
-            'unreadNotificationsCount' => fn () => $request->user()?->unreadNotifications()->count() ?? 0,
+            'unreadNotificationsCount' => function () use ($request) {
+                $authUser = $request->user();
+
+                if (! $authUser) {
+                    return 0;
+                }
+
+                return Cache::remember(
+                    "unread-notifications-count:{$authUser->id}",
+                    now()->addSeconds(30),
+                    fn () => $authUser->unreadNotifications()->count()
+                );
+            },
             'newUsers' => function () use ($request) {
                 $authUser = $request->user();
 
-                $users = User::query()
-                    ->when($authUser, fn ($q) => $q->where('id', '!=', $authUser->id))
-                    ->latest()
-                    ->take(5)
-                    ->get(['id', 'username', 'display_name', 'avatar_path', 'is_verified', 'is_admin']);
+                return Cache::remember(
+                    'new-users:'.($authUser?->id ?? 'guest'),
+                    now()->addSeconds(30),
+                    function () use ($authUser) {
+                        $users = User::query()
+                            ->when($authUser, fn ($q) => $q->where('id', '!=', $authUser->id))
+                            ->latest()
+                            ->take(5)
+                            ->get(['id', 'username', 'display_name', 'avatar_path', 'is_verified', 'is_admin']);
 
-                $followingIds = $authUser ? $authUser->following()->pluck('users.id')->all() : [];
+                        $followingIds = $authUser ? $authUser->following()->pluck('users.id')->all() : [];
 
-                return $users->map(fn (User $user) => [
-                    'id' => $user->id,
-                    'username' => $user->username,
-                    'display_name' => $user->display_name,
-                    'avatar_url' => $user->avatar_url,
-                    'is_verified' => $user->is_verified,
-                    'is_admin' => $user->is_admin,
-                    'is_following' => in_array($user->id, $followingIds),
-                ]);
+                        return $users->map(fn (User $user) => [
+                            'id' => $user->id,
+                            'username' => $user->username,
+                            'display_name' => $user->display_name,
+                            'avatar_url' => $user->avatar_url,
+                            'is_verified' => $user->is_verified,
+                            'is_admin' => $user->is_admin,
+                            'is_following' => in_array($user->id, $followingIds),
+                        ]);
+                    }
+                );
             },
             'trendingHashtags' => fn () => $this->trendingHashtags(),
         ];

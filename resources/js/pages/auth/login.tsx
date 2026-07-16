@@ -1,16 +1,18 @@
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { FormEvent } from 'react';
 import Button from '@/components/button';
 import Seo from '@/components/seo';
 import TextField from '@/components/text-field';
 import Turnstile from '@/components/turnstile';
 import GuestLayout from '@/layouts/guest-layout';
+import { Shared } from '@/types';
 
 interface LoginProps {
     turnstileSiteKey: string;
 }
 
 export default function Login({ turnstileSiteKey }: LoginProps) {
+    const { flash } = usePage<Shared>().props;
     const form = useForm({
         username: '',
         password: '',
@@ -27,6 +29,10 @@ export default function Login({ turnstileSiteKey }: LoginProps) {
     return (
         <GuestLayout>
             <Seo title="Log in" />
+
+            {flash.status && (
+                <p className="mb-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-400">{flash.status}</p>
+            )}
 
             <form onSubmit={submit}>
                 <TextField

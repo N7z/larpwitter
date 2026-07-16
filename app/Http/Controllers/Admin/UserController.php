@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\VerificationType;
 use App\Http\Controllers\Controller;
+use App\Models\PasswordResetToken;
 use App\Models\User;
 use App\Notifications\UserPromotedToAdmin;
 use App\Notifications\UserVerified;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
@@ -65,6 +67,15 @@ class UserController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function resetPassword(Request $request, User $user): JsonResponse
+    {
+        $token = PasswordResetToken::createFor($user);
+
+        return response()->json([
+            'url' => url("/reset-password/{$token}"),
+        ]);
     }
 
     public function destroy(Request $request, User $user): RedirectResponse

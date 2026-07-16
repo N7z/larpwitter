@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { notificationHref, notificationMessage } from '@/lib/notifications';
 import { NotificationItem } from '@/types';
 
-const POLL_INTERVAL = 20_000;
+const POLL_INTERVAL = 120_000;
 const SEEN_CAP = 50;
 
 function storageKey(userId: number): string {

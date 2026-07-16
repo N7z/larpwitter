@@ -3,12 +3,14 @@ import { AnimatePresence, motion } from 'motion/react';
 import { ReactNode, useState } from 'react';
 
 interface ConfirmDialogProps {
-    trigger: ReactNode;
+    trigger?: ReactNode;
     title: string;
     description?: string;
     confirmLabel?: string;
     cancelLabel?: string;
     onConfirm: () => void;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 export default function ConfirmDialog({
@@ -18,12 +20,16 @@ export default function ConfirmDialog({
     confirmLabel = 'Confirm',
     cancelLabel = 'Cancel',
     onConfirm,
+    open: controlledOpen,
+    onOpenChange: setControlledOpen,
 }: ConfirmDialogProps) {
-    const [open, setOpen] = useState(false);
+    const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+    const open = controlledOpen ?? uncontrolledOpen;
+    const setOpen = setControlledOpen ?? setUncontrolledOpen;
 
     return (
         <AlertDialog.Root open={open} onOpenChange={setOpen}>
-            <AlertDialog.Trigger asChild>{trigger}</AlertDialog.Trigger>
+            {trigger && <AlertDialog.Trigger asChild>{trigger}</AlertDialog.Trigger>}
             <AnimatePresence>
                 {open && (
                     <AlertDialog.Portal forceMount>
