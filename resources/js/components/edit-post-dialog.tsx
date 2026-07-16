@@ -16,7 +16,7 @@ export default function EditPostDialog({ postId, body, trigger }: EditPostDialog
     const [processing, setProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const remaining = 280 - value.length;
+    const remaining = 500 - value.length;
 
     function close() {
         setOpen(false);
@@ -85,7 +85,7 @@ export default function EditPostDialog({ postId, body, trigger }: EditPostDialog
                                         value={value}
                                         onChange={(e) => setValue(e.target.value)}
                                         rows={4}
-                                        maxLength={280}
+                                        maxLength={500}
                                         autoFocus
                                         className="mt-3 w-full resize-none rounded-lg border border-gray-200 p-2 text-sm text-gray-900 focus:border-sky-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                                     />

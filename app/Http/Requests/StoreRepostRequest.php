@@ -20,7 +20,7 @@ class StoreRepostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'body' => ['nullable', 'string', 'max:280'],
+            'body' => ['nullable', 'string', 'max:500'],
         ];
     }
 }

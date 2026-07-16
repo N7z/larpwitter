@@ -18,7 +18,7 @@ export default function RepostDialog({ post, trigger }: RepostDialogProps) {
     const [error, setError] = useState<string | null>(null);
 
     const embed = post.repost_of ?? post;
-    const remaining = 280 - comment.length;
+    const remaining = 500 - comment.length;
 
     function close() {
         setOpen(false);
@@ -86,7 +86,7 @@ export default function RepostDialog({ post, trigger }: RepostDialogProps) {
                                     onChange={(e) => setComment(e.target.value)}
                                     placeholder="Add a comment (optional)"
                                     rows={2}
-                                    maxLength={280}
+                                    maxLength={500}
                                     className="mt-3 w-full resize-none rounded-lg border border-gray-200 p-2 text-sm text-gray-900 focus:border-sky-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                                 />
                                 <div

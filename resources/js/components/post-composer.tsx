@@ -56,7 +56,7 @@ export default function PostComposer({ action, placeholder = "What's happening?"
         });
     }
 
-    const remaining = 280 - form.data.body.length;
+    const remaining = 500 - form.data.body.length;
 
     return (
         <form onSubmit={submit} className="mb-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
@@ -66,7 +66,7 @@ export default function PostComposer({ action, placeholder = "What's happening?"
                 onPaste={onPaste}
                 placeholder={placeholder}
                 rows={3}
-                maxLength={280}
+                maxLength={500}
                 className="w-full resize-none border-none text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-500"
             />
             {form.errors.body && <p className="mt-1 text-sm text-red-600">{form.errors.body}</p>}
