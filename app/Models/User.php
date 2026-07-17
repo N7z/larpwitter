@@ -61,6 +61,15 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Cache key flagging that this user has a new notification, so pollers
+     * can check the cache instead of the database.
+     */
+    public static function notificationFlagKey(int $userId): string
+    {
+        return "notif-flag:{$userId}";
+    }
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\StreamedEvent;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -72,15 +73,25 @@ class NotificationController extends Controller
         @set_time_limit(0); // sleep() counts as wall time on Windows
 
         $since = now();
+        $flagSince = now()->getTimestampMs();
 
         while (now()->lt($deadline)) {
-            // >= because created_at has second precision; the client dedupes by id.
-            $fresh = $user->notifications()
-                ->where('created_at', '>=', $since)
-                ->get();
+            // Each tick reads only the cache flag; the database is queried
+            // solely when a notification actually arrived, so an idle site
+            // lets a compute-billed database sleep.
+            $flag = Cache::get(User::notificationFlagKey($user->id));
 
-            if ($fresh->isNotEmpty()) {
-                $since = Carbon::parse($fresh->max('created_at'));
+            if ($flag !== null && (int) $flag >= $flagSince) {
+                $flagSince = (int) $flag + 1;
+
+                // >= because created_at has second precision; the client dedupes by id.
+                $fresh = $user->notifications()
+                    ->where('created_at', '>=', $since)
+                    ->get();
+
+                if ($fresh->isNotEmpty()) {
+                    $since = Carbon::parse($fresh->max('created_at'));
+                }
 
                 foreach ($this->mapNotifications($fresh) as $item) {
                     yield new StreamedEvent(event: 'notification', data: json_encode($item));
