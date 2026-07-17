@@ -20,6 +20,12 @@ export default function TypingRacePage({ race: initialRace }: TypingRacePageProp
     const [race, setRace] = useState(initialRace);
     const [now, setNow] = useState(() => Date.now());
 
+    // Sync when Inertia re-renders the page with fresh props (e.g. after
+    // publishing the result).
+    useEffect(() => {
+        setRace(initialRace);
+    }, [initialRace]);
+
     // Offset between server clock and local clock, so the countdown and WPM
     // math agree with the server regardless of the visitor's clock.
     const clockOffset = useMemo(() => Date.parse(initialRace.server_now) - Date.now(), [initialRace.server_now]);
@@ -272,6 +278,9 @@ function Passage({ passage, index, racing }: { passage: string; index: number; r
 
 function ResultPanel({ race }: { race: TypingRaceState }) {
     const winner = race.winner_id === race.challenger.id ? race.challenger : race.winner_id === race.opponent.id ? race.opponent : null;
+    const publisherSide = race.winner_id === null ? 'challenger' : race.winner_id === race.challenger.id ? 'challenger' : 'opponent';
+    const canPost = !race.post_id && race.me === publisherSide;
+    const [posting, setPosting] = useState(false);
 
     return (
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center dark:border-gray-800 dark:bg-gray-950">
@@ -283,6 +292,19 @@ function ResultPanel({ race }: { race: TypingRaceState }) {
                 @{race.challenger.username}: {race.challenger.wpm ?? 0} WPM · @{race.opponent.username}:{' '}
                 {race.opponent.wpm ?? 0} WPM
             </p>
+            {canPost && (
+                <Button
+                    type="button"
+                    disabled={posting}
+                    onClick={() => {
+                        setPosting(true);
+                        router.post(`/games/typing-race/${race.id}/publish`, {}, { onFinish: () => setPosting(false) });
+                    }}
+                    className="mt-4"
+                >
+                    {posting ? 'Posting…' : 'Post result to feed'}
+                </Button>
+            )}
             <div className="mt-4 flex justify-center gap-3 text-sm font-semibold">
                 {race.post_id && (
                     <Link href={`/posts/${race.post_id}`} className="text-sky-600 hover:underline dark:text-sky-400">

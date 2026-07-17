@@ -174,8 +174,21 @@ class TypingRaceController extends Controller
         $race->winner_id = $this->decideWinner($race);
         $race->status = 'finished';
         $race->save();
+    }
+
+    /**
+     * Post the result to the feed. Only the winner (or the challenger on a
+     * draw) may publish, and only once.
+     */
+    public function publish(Request $request, TypingRace $race): RedirectResponse
+    {
+        abort_unless($race->status === 'finished', 422, 'This race is not finished yet.');
+        abort_unless($race->post_id === null, 422, 'This result was already posted.');
+        abort_unless($request->user()->id === ($race->winner_id ?? $race->challenger_id), 403);
 
         $this->publishResult($race);
+
+        return redirect()->route('typing-race.show', $race);
     }
 
     private function decideWinner(TypingRace $race): ?int

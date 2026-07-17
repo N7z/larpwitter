@@ -6,12 +6,24 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\StreamedEvent;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class NotificationController extends Controller
 {
+    /**
+     * How long a single SSE connection stays open. The browser's EventSource
+     * reconnects automatically when it ends, so no worker is held forever.
+     */
+    private const STREAM_WINDOW_SECONDS = 50;
+
+    /** Seconds between notification checks inside an open stream. */
+    private const STREAM_TICK_SECONDS = 2;
+
     public function index(Request $request): Response
     {
         $user = $request->user();
@@ -35,6 +47,50 @@ class NotificationController extends Controller
         return response()->json([
             'notifications' => $this->mapNotifications($notifications),
         ]);
+    }
+
+    /**
+     * Server-sent events stream of new notifications for the toast stack.
+     */
+    public function stream(Request $request): StreamedResponse
+    {
+        $user = $request->user();
+
+        return response()->eventStream(
+            fn () => $this->newNotificationEvents($user, now()->addSeconds(self::STREAM_WINDOW_SECONDS)),
+        );
+    }
+
+    /**
+     * Yield notifications created while the stream is open, plus periodic
+     * pings so a closed connection is detected instead of idling.
+     *
+     * @return \Generator<int, StreamedEvent>
+     */
+    protected function newNotificationEvents(User $user, Carbon $deadline): \Generator
+    {
+        @set_time_limit(0); // sleep() counts as wall time on Windows
+
+        $since = now();
+
+        while (now()->lt($deadline)) {
+            // >= because created_at has second precision; the client dedupes by id.
+            $fresh = $user->notifications()
+                ->where('created_at', '>=', $since)
+                ->get();
+
+            if ($fresh->isNotEmpty()) {
+                $since = Carbon::parse($fresh->max('created_at'));
+
+                foreach ($this->mapNotifications($fresh) as $item) {
+                    yield new StreamedEvent(event: 'notification', data: json_encode($item));
+                }
+            } else {
+                yield new StreamedEvent(event: 'ping', data: '{}');
+            }
+
+            sleep(self::STREAM_TICK_SECONDS);
+        }
     }
 
     /**

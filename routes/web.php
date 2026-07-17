@@ -69,9 +69,11 @@ Route::middleware('auth')->group(function () {
     Route::post('games/typing-race/{race}/decline', [TypingRaceController::class, 'decline'])->name('typing-race.decline');
     Route::get('games/typing-race/{race}/state', [TypingRaceController::class, 'state'])->name('typing-race.state');
     Route::post('games/typing-race/{race}/progress', [TypingRaceController::class, 'progress'])->name('typing-race.progress');
+    Route::post('games/typing-race/{race}/publish', [TypingRaceController::class, 'publish'])->name('typing-race.publish');
 
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('notifications/latest', [NotificationController::class, 'latest'])->name('notifications.latest');
+    Route::get('notifications/stream', [NotificationController::class, 'stream'])->name('notifications.stream');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

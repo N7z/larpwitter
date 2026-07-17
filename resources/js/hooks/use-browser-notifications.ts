@@ -6,6 +6,9 @@ import { NotificationItem } from '@/types';
 const POLL_INTERVAL = 120_000;
 const SEEN_CAP = 50;
 
+/** Fired for every newly seen notification; the toast stack listens for it. */
+export const NOTIFICATION_EVENT = 'larpwitter:notification';
+
 function storageKey(userId: number): string {
     return `larpwitter:seen-notifications:${userId}`;
 }
@@ -78,8 +81,11 @@ export function useBrowserNotifications(userId: number | null): void {
                     .filter((notification) => !seenRef.current.has(notification.id))
                     .reverse()
                     .forEach((notification) => {
-                        if (!seeding && canNotify) {
-                            show(notification);
+                        if (!seeding) {
+                            window.dispatchEvent(new CustomEvent(NOTIFICATION_EVENT, { detail: notification }));
+                            if (canNotify) {
+                                show(notification);
+                            }
                         }
                         seenRef.current.add(notification.id);
                     });

@@ -4,15 +4,18 @@ import { MotionConfig } from 'motion/react';
 import { PropsWithChildren } from 'react';
 import Avatar from '@/components/avatar';
 import Footer from '@/components/footer';
+import NotificationToasts from '@/components/notification-toasts';
 import RightSidebar from '@/components/right-sidebar';
 import ThemeToggle from '@/components/theme-toggle';
 import { useBrowserNotifications } from '@/hooks/use-browser-notifications';
+import { useNotificationStream } from '@/hooks/use-notification-stream';
 import { Shared } from '@/types';
 
 export default function AppLayout({ children }: PropsWithChildren) {
     const { auth, unreadNotificationsCount } = usePage<Shared>().props;
 
     useBrowserNotifications(auth.user?.id ?? null);
+    useNotificationStream(auth.user?.id ?? null);
 
     return (
         <MotionConfig reducedMotion="user">
@@ -85,6 +88,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                     </aside>
                 </div>
                 <Footer />
+                {auth.user && <NotificationToasts />}
             </div>
         </MotionConfig>
     );
