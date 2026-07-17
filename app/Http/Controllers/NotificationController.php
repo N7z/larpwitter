@@ -66,6 +66,7 @@ class NotificationController extends Controller
                     'avatar_url' => $actor->avatar_url,
                 ] : null,
                 'post_id' => $postId && $posts->has($postId) ? $postId : null,
+                'race_id' => $notification->data['race_id'] ?? null,
                 'is_quote' => $notification->data['is_quote'] ?? false,
                 'excerpt' => $notification->data['excerpt'] ?? null,
                 'is_new' => $notification->read_at === null,

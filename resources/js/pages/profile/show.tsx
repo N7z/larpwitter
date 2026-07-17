@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import AvatarUpload from '@/components/avatar-upload';
 import Avatar from '@/components/avatar';
 import BioEditor from '@/components/bio-editor';
+import ChallengeButton from '@/components/challenge-button';
 import DisplayNameEditor from '@/components/display-name-editor';
 import FollowButton from '@/components/follow-button';
 import PostCard from '@/components/post-card';
@@ -72,7 +73,12 @@ export default function ProfileShow({
                             )}
                         </div>
                     </div>
-                    {isFollowing !== null && <FollowButton username={profileUser.username} isFollowing={isFollowing} />}
+                    {isFollowing !== null && (
+                        <div className="flex items-center gap-2">
+                            <ChallengeButton username={profileUser.username} />
+                            <FollowButton username={profileUser.username} isFollowing={isFollowing} />
+                        </div>
+                    )}
                 </div>
 
                 <div className="mt-3">

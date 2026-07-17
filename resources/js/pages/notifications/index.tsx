@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { AtSign, BadgeCheck, Heart, MessageCircle, Repeat2, ShieldCheck, Trash2, UserPlus } from 'lucide-react';
+import { AtSign, BadgeCheck, Heart, Keyboard, MessageCircle, Repeat2, ShieldCheck, Trash2, UserPlus } from 'lucide-react';
 import Avatar from '@/components/avatar';
 import NotificationPermissionButton from '@/components/notification-permission-button';
 import Seo from '@/components/seo';
@@ -20,6 +20,7 @@ const ICONS = {
     verified: BadgeCheck,
     admin: ShieldCheck,
     post_removed: Trash2,
+    typing_race: Keyboard,
 };
 
 export default function NotificationsIndex({ notifications }: NotificationsIndexProps) {

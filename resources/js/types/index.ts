@@ -42,13 +42,34 @@ export interface PostItem {
 
 export interface NotificationItem {
     id: string;
-    type: 'like' | 'reply' | 'repost' | 'follow' | 'mention' | 'verified' | 'admin' | 'post_removed';
+    type: 'like' | 'reply' | 'repost' | 'follow' | 'mention' | 'verified' | 'admin' | 'post_removed' | 'typing_race';
     actor: UserInfo | null;
     post_id: number | null;
+    race_id: number | null;
     is_quote: boolean;
     excerpt: string | null;
     is_new: boolean;
     created_at: string;
+}
+
+export interface RacerInfo extends UserInfo {
+    progress: number;
+    wpm: number | null;
+    accuracy: number | null;
+    finished: boolean;
+}
+
+export interface TypingRaceState {
+    id: number;
+    status: 'pending' | 'active' | 'finished' | 'declined' | 'expired';
+    passage: string;
+    starts_at: string | null;
+    server_now: string;
+    me: 'challenger' | 'opponent' | null;
+    winner_id: number | null;
+    post_id: number | null;
+    challenger: RacerInfo;
+    opponent: RacerInfo;
 }
 
 export interface SidebarUser extends UserInfo {

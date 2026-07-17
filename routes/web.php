@@ -18,6 +18,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\RepostController;
 use App\Http\Controllers\SeoController;
+use App\Http\Controllers\TypingRaceController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -61,6 +62,13 @@ Route::middleware('auth')->group(function () {
     Route::post('profile/avatar', [AvatarController::class, 'store'])->name('avatar.store');
     Route::post('profile/bio', [BioController::class, 'store'])->name('bio.store');
     Route::post('profile/display-name', [DisplayNameController::class, 'store'])->name('display-name.store');
+
+    Route::post('games/typing-race', [TypingRaceController::class, 'store'])->name('typing-race.store');
+    Route::get('games/typing-race/{race}', [TypingRaceController::class, 'show'])->name('typing-race.show');
+    Route::post('games/typing-race/{race}/accept', [TypingRaceController::class, 'accept'])->name('typing-race.accept');
+    Route::post('games/typing-race/{race}/decline', [TypingRaceController::class, 'decline'])->name('typing-race.decline');
+    Route::get('games/typing-race/{race}/state', [TypingRaceController::class, 'state'])->name('typing-race.state');
+    Route::post('games/typing-race/{race}/progress', [TypingRaceController::class, 'progress'])->name('typing-race.progress');
 
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('notifications/latest', [NotificationController::class, 'latest'])->name('notifications.latest');

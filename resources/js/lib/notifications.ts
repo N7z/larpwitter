@@ -20,12 +20,18 @@ export function notificationMessage(notification: NotificationItem): string {
             return `${name} made you an admin`;
         case 'post_removed':
             return `${name} removed one of your posts`;
+        case 'typing_race':
+            return `${name} challenged you to a typing race`;
     }
 }
 
 const LINKS_TO_ACTOR: NotificationItem['type'][] = ['follow', 'verified', 'admin'];
 
 export function notificationHref(notification: NotificationItem): string | null {
+    if (notification.type === 'typing_race') {
+        return notification.race_id ? `/games/typing-race/${notification.race_id}` : null;
+    }
+
     if (LINKS_TO_ACTOR.includes(notification.type)) {
         return notification.actor ? `/u/${notification.actor.username}` : null;
     }
