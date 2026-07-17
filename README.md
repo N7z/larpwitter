@@ -1,5 +1,7 @@
 # Larpwitter
 
+<img width="88" height="18" alt="image" src="https://github.com/user-attachments/assets/7b3a7346-bff3-4809-ba11-38998df8018d" />
+
 A Twitter-style microblogging app built with Laravel 12, React 19, and Inertia.js.
 
 Users can publish short posts (up to 500 characters), reply, repost, like, follow other users, and browse hashtags. The home feed mixes posts from followed users with recommendations. Admins get a panel for managing users and moderating posts.
