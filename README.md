@@ -28,7 +28,7 @@ Users can publish short posts (up to 500 characters), reply, repost, like, follo
 Requirements: PHP 8.2+, Composer, Node.js with npm.
 
 ```bash
-git clone <repo-url> larpwitter
+git clone https://github.com/N7z/larpwitter.git
 cd larpwitter
 composer run setup
 ```
