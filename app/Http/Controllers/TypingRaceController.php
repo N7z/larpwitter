@@ -106,7 +106,7 @@ class TypingRaceController extends Controller
             }
 
             // Progress is the length of the typed prefix that matches the
-            // passage — the server never trusts a raw counter from the client.
+            // passage: the server never trusts a raw counter from the client.
             $progress = $this->matchingPrefixLength($race->passage, $validated['typed']);
 
             $race->{$side.'_progress'} = max($race->{$side.'_progress'}, $progress);
@@ -209,7 +209,7 @@ class TypingRaceController extends Controller
         if ($race->winner_id === null) {
             $author = $race->challenger;
             $body = sprintf(
-                '🏁 @%s and @%s tied in a typing race — %d WPM each! #TypingRace',
+                '🏁 @%s and @%s tied in a typing race: %d WPM each! #TypingRace',
                 $race->challenger->username,
                 $race->opponent->username,
                 $race->challenger_wpm ?? 0,
@@ -222,14 +222,14 @@ class TypingRaceController extends Controller
             $author = $winner;
             $body = $race->{$loserSide.'_finished_at'}
                 ? sprintf(
-                    '🏁 I just beat @%s in a typing race — %d WPM vs %d WPM (%d%% accuracy)! #TypingRace',
+                    '🏁 I just beat @%s in a typing race: %d WPM vs %d WPM (%d%% accuracy)! #TypingRace',
                     $loser->username,
                     $race->{$winnerSide.'_wpm'},
                     $race->{$loserSide.'_wpm'},
                     $race->{$winnerSide.'_accuracy'} ?? 100,
                 )
                 : sprintf(
-                    "🏁 I just beat @%s in a typing race — %d WPM, and they didn't even finish 😅 #TypingRace",
+                    "🏁 I just beat @%s in a typing race: %d WPM, and they didn't even finish 😅 #TypingRace",
                     $loser->username,
                     $race->{$winnerSide.'_wpm'},
                 );

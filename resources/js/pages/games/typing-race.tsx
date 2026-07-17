@@ -34,7 +34,7 @@ export default function TypingRacePage({ race: initialRace }: TypingRacePageProp
     const countdown = startsAt ? Math.ceil((startsAt - serverNow) / 1000) : null;
     const racing = race.status === 'active' && countdown !== null && countdown <= 0;
 
-    // Local typing state — kept out of `race` so polling never clobbers it.
+    // Local typing state: kept out of `race` so polling never clobbers it.
     const [index, setIndex] = useState(me?.progress ?? 0);
     const [errors, setErrors] = useState(0);
     const lastSent = useRef(-1);
@@ -56,7 +56,7 @@ export default function TypingRacePage({ race: initialRace }: TypingRacePageProp
                 const { data } = await axios.get<{ race: TypingRaceState }>(`/games/typing-race/${race.id}/state`);
                 setRace(data.race);
             } catch {
-                // transient network error — next tick will retry
+                // transient network error: next tick will retry
             }
         }, interval);
         return () => clearInterval(timer);
@@ -159,7 +159,7 @@ export default function TypingRacePage({ race: initialRace }: TypingRacePageProp
                     <div className="flex flex-col items-start gap-3">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             <strong>@{race.challenger.username}</strong> challenged you to a typing race. First to finish the
-                            passage wins — the result gets posted to the feed!
+                            passage wins: the result gets posted to the feed!
                         </p>
                         <div className="flex gap-2">
                             <Button type="button" onClick={() => router.post(`/games/typing-race/${race.id}/accept`)}>
@@ -194,7 +194,7 @@ export default function TypingRacePage({ race: initialRace }: TypingRacePageProp
                             </p>
                         ) : (
                             <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-                                Just start typing — errors count against your accuracy.
+                                Just start typing: errors count against your accuracy.
                             </p>
                         )}
                     </div>
